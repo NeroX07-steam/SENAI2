@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>LUIZ.EXE — Wired</title>
+
+<meta
+    name="description"
+    content="Um espaço perdido entre a Wired, Lain e Punpun."
+>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #050505;
+        color: #e8e8e8;
+        font-family: Arial, Helvetica, sans-serif;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9998;
+        background:
+            linear-gradient(
+                rgba(255,255,255,0.015) 50%,
+                transparent 50%
+            );
+        background-size: 100% 4px;
+        opacity: .18;
+    }
+
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9997;
+        background: radial-gradient(
+            circle at center,
+            transparent 30%,
+            rgba(0,0,0,.75) 100%
+        );
+    }
+
+    ::selection {
+        background: #fff;
+        color: #000;
+    }
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    #loading {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        transition: opacity 1s ease, visibility 1s ease;
+    }
+
+    #loading.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .loading-box {
+        width: min(700px, 85%);
+    }
+
+    .loading-title {
+        font-size: clamp(2rem, 7vw, 5rem);
+        font-weight: 900;
+        letter-spacing: 8px;
+        text-align: center;
+        text-shadow:
+            3px 0 #777,
+            -3px 0 #222;
+        animation: glitch 1s infinite;
+    }
+
+    .loading-subtitle {
+        text-align: center;
+        color: #777;
+        margin-top: 15px;
+        letter-spacing: 4px;
+    }
+
+    .loading-bar {
+        width: 100%;
+        height: 3px;
+        background: #171717;
+        margin-top: 35px;
+        overflow: hidden;
+    }
+
+    .loading-progress {
+        width: 0%;
+        height: 100%;
+        background: #fff;
+        box-shadow: 0 0 15px #fff;
+        transition: width .15s linear;
+    }
+
+    .loading-percent {
+        margin-top: 12px;
+        text-align: right;
+        font-family: monospace;
+        color: #999;
+    }
+
+    /* =========================
+       INTRO
+    ========================= */
+
+    #intro {
+        position: fixed;
+        inset: 0;
+        z-index: 9000;
+        background: #030303;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 30px;
+    }
+
+    .intro-content {
+        max-width: 800px;
+    }
+
+    .intro-symbol {
+        font-size: 5rem;
+        color: #aaa;
+        animation: pulse 2s infinite;
+    }
+
+    .intro-content h1 {
+        font-size: clamp(3rem, 10vw, 8rem);
+        letter-spacing: 15px;
+        margin: 20px 0;
+        text-transform: uppercase;
+    }
+
+    .intro-content p {
+        color: #777;
+        max-width: 600px;
+        margin: auto;
+        line-height: 1.8;
+    }
+
+    .enter-btn {
+        margin-top: 35px;
+        padding: 16px 40px;
+        background: transparent;
+        border: 1px solid #888;
+        color: white;
+        cursor: pointer;
+        letter-spacing: 5px;
+        transition: .3s;
+    }
+
+    .enter-btn:hover {
+        background: white;
+        color: black;
+        box-shadow: 0 0 30px rgba(255,255,255,.3);
+    }
+
+    /* =========================
+       SITE
+    ========================= */
+
+    #site {
+        display: none;
+    }
+
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        z-index: 5000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 6%;
+        background: rgba(0,0,0,.7);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid #171717;
+    }
+
+    .logo {
+        font-family: monospace;
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 4px;
+    }
+
+    .logo span {
+        color: #666;
+    }
+
+    nav {
+        display: flex;
+        gap: 25px;
+    }
+
+    nav a {
+        color: #777;
+        text-decoration: none;
+        font-size: 12px;
+        letter-spacing: 2px;
+        transition: .3s;
+    }
+
+    nav a:hover {
+        color: white;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+        min-height: 100vh;
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 120px 8% 80px;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: "WIRED";
+        position: absolute;
+        font-size: clamp(8rem, 25vw, 30rem);
+        font-weight: 900;
+        color: rgba(255,255,255,.015);
+        right: -5%;
+        bottom: -5%;
+        pointer-events: none;
+    }
+
+    .hero-content {
+        max-width: 850px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .small-text {
+        color: #666;
+        letter-spacing: 5px;
+        font-family: monospace;
+        margin-bottom: 20px;
+    }
+
+    .hero h1 {
+        font-size: clamp(4rem, 12vw, 11rem);
+        line-height: .8;
+        letter-spacing: -8px;
+        text-transform: uppercase;
+        text-shadow:
+            5px 0 rgba(255,255,255,.08),
+            -5px 0 rgba(255,255,255,.04);
+    }
+
+    .hero h1 span {
+        display: block;
+        color: #555;
+    }
+
+    .hero-description {
+        max-width: 650px;
+        margin-top: 35px;
+        color: #888;
+        line-height: 1.8;
+        font-size: 16px;
+    }
+
+    .hero-buttons {
+        margin-top: 35px;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .hero-btn {
+        padding: 14px 25px;
+        border: 1px solid #444;
+        color: white;
+        text-decoration: none;
+        font-size: 12px;
+        letter-spacing: 3px;
+        transition: .3s;
+    }
+
+    .hero-btn:hover {
+        background: white;
+        color: black;
+        border-color: white;
+    }
+
+    .scroll {
+        position: absolute;
+        bottom: 35px;
+        left: 8%;
+        color: #555;
+        font-family: monospace;
+        font-size: 11px;
+        letter-spacing: 3px;
+        animation: bounce 2s infinite;
+    }
+
+    /* =========================
+       SECTIONS
+    ========================= */
+
+    section {
+        padding: 120px 8%;
+        border-top: 1px solid #111;
+    }
+
+    .section-label {
+        color: #555;
+        font-family: monospace;
+        letter-spacing: 4px;
+        margin-bottom: 15px;
+    }
+
+    .section-title {
+        font-size: clamp(2.5rem, 7vw, 6rem);
+        text-transform: uppercase;
+        letter-spacing: -3px;
+        margin-bottom: 50px;
+    }
+
+    /* =========================
+       CHARACTERS
+    ========================= */
+
+    .characters {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+
+    .character {
+        position: relative;
+        min-height: 500px;
+        overflow: hidden;
+        border: 1px solid #222;
+        background: #090909;
+    }
+
+    .character img {
+        width: 100%;
+        height: 100%;
+        min-height: 500px;
+        object-fit: cover;
+        display: block;
+        filter: grayscale(100%);
+        transition: .7s;
+    }
+
+    .character:hover img {
+        transform: scale(1.06);
+        filter: grayscale(20%);
+    }
+
+    .character-info {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 35px;
+        background: linear-gradient(
+            transparent,
+            rgba(0,0,0,.95)
+        );
+    }
+
+    .character-info h3 {
+        font-size: 40px;
+        margin-bottom: 8px;
+    }
+
+    .character-info p {
+        color: #999;
+        line-height: 1.6;
+    }
+
+    /* =========================
+       FRASES
+    ========================= */
+
+    .quote-box {
+        min-height: 400px;
+        border: 1px solid #222;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px;
+        text-align: center;
+        background:
+            radial-gradient(
+                circle,
+                #151515 0%,
+                #050505 70%
+            );
+        position: relative;
+        overflow: hidden;
+    }
+
+    .quote-box::before {
+        content: "“";
+        position: absolute;
+        font-size: 25rem;
+        color: rgba(255,255,255,.02);
+        top: -130px;
+        left: 20px;
+    }
+
+    #quote {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+        font-size: clamp(1.5rem, 4vw, 3.5rem);
+        line-height: 1.4;
+        color: #ddd;
+    }
+
+    .quote-number {
+        margin-top: 30px;
+        color: #555;
+        font-family: monospace;
+    }
+
+    .quote-btn {
+        margin-top: 30px;
+        padding: 12px 25px;
+        background: transparent;
+        color: white;
+        border: 1px solid #333;
+        cursor: pointer;
+    }
+
+    .quote-btn:hover {
+        background: white;
+        color: black;
+    }
+
+    /* =========================
+       ABOUT
+    ========================= */
+
+    .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+    }
+
+    .about-text {
+        color: #888;
+        line-height: 2;
+        font-size: 17px;
+    }
+
+    .terminal-card {
+        border: 1px solid #222;
+        padding: 25px;
+        background: #080808;
+        font-family: monospace;
+        color: #777;
+    }
+
+    .terminal-top {
+        display: flex;
+        gap: 7px;
+        margin-bottom: 25px;
+    }
+
+    .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #444;
+    }
+
+    .terminal-line {
+        margin: 12px 0;
+    }
+
+    .terminal-line span {
+        color: #ddd;
+    }
+
+    /* =========================
+       PROJECTS
+    ========================= */
+
+    .projects {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .project {
+        min-height: 230px;
+        padding: 30px;
+        border: 1px solid #222;
+        background: #080808;
+        transition: .3s;
+    }
+
+    .project:hover {
+        transform: translateY(-8px);
+        border-color: #555;
+    }
+
+    .project-number {
+        color: #444;
+        font-family: monospace;
+    }
+
+    .project h3 {
+        margin-top: 50px;
+        font-size: 25px;
+    }
+
+    .project p {
+        margin-top: 12px;
+        color: #666;
+        line-height: 1.6;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+        padding: 70px 8%;
+        border-top: 1px solid #111;
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        flex-wrap: wrap;
+        color: #555;
+        font-family: monospace;
+    }
+
+    .footer-logo {
+        color: #aaa;
+        font-size: 20px;
+        letter-spacing: 3px;
+    }
+
+    /* =========================
+       EFFECTS
+    ========================= */
+
+    .glitch {
+        animation: glitch 3s infinite;
+    }
+
+    @keyframes glitch {
+        0%, 90%, 100% {
+            transform: translate(0);
+        }
+
+        92% {
+            transform: translate(-3px, 2px);
+        }
+
+        94% {
+            transform: translate(3px, -2px);
+        }
+
+        96% {
+            transform: translate(-2px, 1px);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: .4;
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(10px);
+        }
+    }
+
+    @media (max-width: 850px) {
+        nav {
+            display: none;
+        }
+
+        .characters,
+        .about-grid,
+        .projects {
+            grid-template-columns: 1fr;
+        }
+
+        .hero h1 {
+            letter-spacing: -4px;
+        }
+
+        .character {
+            min-height: 400px;
+        }
+
+        .character img {
+            min-height: 400px;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<!-- =========================
+     LOADING
+========================= -->
+
+<div id="loading">
+    <div class="loading-box">
+
+        <div class="loading-title">
+            LUIZ.EXE
+        </div>
+
+        <div class="loading-subtitle">
+            CONNECTING TO THE WIRED...
+        </div>
+
+        <div class="loading-bar">
+            <div class="loading-progress" id="progress"></div>
+        </div>
+
+        <div class="loading-percent" id="percent">
+            0%
+        </div>
+
+    </div>
+</div>
+
+
+<!-- =========================
+     INTRO
+========================= -->
+
+<div id="intro">
+
+    <div class="intro-content">
+
+        <div class="intro-symbol">
+            ◉
+        </div>
+
+        <h1 class="glitch">
+            WIRED
+        </h1>
+
+        <p>
+            Talvez você esteja aqui por acaso.
+            Talvez não exista acaso.
+            Entre na rede e descubra o que existe
+            depois da tela.
+        </p>
+
+        <button class="enter-btn" id="enterBtn">
+            ENTRAR
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     SITE
+========================= -->
+
+<div id="site">
+
+    <header>
+
+        <div class="logo">
+            LUIZ<span>.EXE</span>
+        </div>
+
+        <nav>
+            <a href="#home">HOME</a>
+            <a href="#characters">PERSONAGENS</a>
+            <a href="#quotes">FRASES</a>
+            <a href="#about">SOBRE</a>
+            <a href="#projects">PROJETOS</a>
+        </nav>
+
+    </header>
+
+
+    <!-- =========================
+         HOME
+    ========================= -->
+
+    <main id="home">
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div class="small-text">
+                    SYSTEM // 001
+                </div>
+
+                <h1 class="glitch">
+                    GOOD<br>
+                    NIGHT
+                    <span>WIRED.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Um pequeno espaço perdido entre a realidade,
+                    a internet e aquilo que existe dentro da cabeça.
+                    Inspirado por Serial Experiments Lain,
+                    Goodnight Punpun e pela estética de uma internet
+                    que parece ter sido abandonada.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a class="hero-btn" href="#characters">
+                        EXPLORE
+                    </a>
+
+                    <a class="hero-btn" href="#quotes">
+                        FRASES
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="scroll">
+                ↓ SCROLL TO CONNECT
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PERSONAGENS
+        ========================= -->
+
+        <section id="characters">
+
+            <div class="section-label">
+                01 // CHARACTERS
+            </div>
+
+            <h2 class="section-title">
+                Eles estão aqui.
+            </h2>
+
+            <div class="characters">
+
+                <article class="character">
+
+                    <img
+                        src="./assets/punpun1.jpg"
+                        alt="Punpun"
+                        loading="lazy"
+                    >
+
+                    <div class="character-info">
+
+                        <h3>Punpun</h3>
+
+                        <p>
+                            Um personagem que observa o mundo
+                            através de uma perspectiva estranha,
+                            silenciosa e profundamente humana.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="character">
+
+                    <img
+                        src="./assets/punpun2.jpg"
+                        alt="Punpun"
+                        loading="lazy"
+                    >
+
+                    <div class="character-info">
+
+                        <h3>Another side</h3>
+
+                        <p>
+                            Entre lembranças, pensamentos e
+                            uma realidade que nem sempre parece
+                            fazer sentido.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FRASES
+        ========================= -->
+
+        <section id="quotes">
+
+            <div class="section-label">
+                02 // THOUGHTS
+            </div>
+
+            <h2 class="section-title">
+                Dentro da cabeça.
+            </h2>
+
+            <div class="quote-box">
+
+                <div>
+
+                    <div id="quote">
+                        A conexão começou.
+                    </div>
+
+                    <div
+                        class="quote-number"
+                        id="quoteNumber"
+                    >
+                        MEMORY 001
+                    </div>
+
+                    <button
+                        class="quote-btn"
+                        id="nextQuote"
+                    >
+                        PRÓXIMA MEMÓRIA →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SOBRE
+        ========================= -->
+
+        <section id="about">
+
+            <div class="section-label">
+                03 // SYSTEM
+            </div>
+
+            <h2 class="section-title">
+                Quem está aqui?
+            </h2>
+
+            <div class="about-grid">
+
+                <div class="about-text">
+
+                    <p>
+                        Este site é uma experiência pessoal
+                        feita para juntar algumas coisas que
+                        fazem parte da minha internet.
+                    </p>
+
+                    <br>
+
+                    <p>
+                        Lain, Punpun, estética glitch,
+                        programação, imagens e projetos.
+                        Nada precisa fazer sentido o tempo todo.
+                    </p>
+
+                    <br>
+
+                    <p>
+                        A ideia é simplesmente entrar,
+                        explorar e deixar a página te levar
+                        para algum lugar.
+                    </p>
+
+                </div>
+
+
+                <div class="terminal-card">
+
+                    <div class="terminal-top">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+
+                    <div class="terminal-line">
+                        &gt; booting system...
+                    </div>
+
+                    <div class="terminal-line">
+                        &gt; user:
+                        <span>luiz</span>
+                    </div>
+
+                    <div class="terminal-line">
+                        &gt; status:
+                        <span>connected</span>
+                    </div>
+
+                    <div class="terminal-line">
+                        &gt; reality:
+                        <span>unstable</span>
+                    </div>
+
+                    <div class="terminal-line">
+                        &gt; wired:
+                        <span>online</span>
+                    </div>
+
+                    <div class="terminal-line">
+                        &gt; connection:
+                        <span>██████████ 100%</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PROJETOS
+        ========================= -->
+
+        <section id="projects">
+
+            <div class="section-label">
+                04 // PROJECTS
+            </div>
+
+            <h2 class="section-title">
+                Arquivos.
+            </h2>
+
+            <div class="projects">
+
+                <article class="project">
+
+                    <div class="project-number">
+                        FILE_001
+                    </div>
+
+                    <h3>Punpun Dev</h3>
+
+                    <p>
+                        Projeto principal do universo
+                        desse site.
+                    </p>
+
+                </article>
+
+
+                <article class="project">
+
+                    <div class="project-number">
+                        FILE_002
+                    </div>
+
+                    <h3>JavaScript</h3>
+
+                    <p>
+                        Experimentos, efeitos e pequenas
+                        experiências feitas na web.
+                    </p>
+
+                </article>
+
+
+                <article class="project">
+
+                    <div class="project-number">
+                        FILE_003
+                    </div>
+
+                    <h3>Future</h3>
+
+                    <p>
+                        Ainda não existe.
+                        Talvez esteja sendo criado agora.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer>
+
+        <div>
+            <div class="footer-logo">
+                LUIZ.EXE
+            </div>
+
+            <p>
+                CONNECTION TERMINATED?
+            </p>
+        </div>
+
+        <div>
+            © 2026 // THE WIRED
+        </div>
+
+    </footer>
+
+</div>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    const loading = document.getElementById("loading");
+    const progress = document.getElementById("progress");
+    const percent = document.getElementById("percent");
+    const intro = document.getElementById("intro");
+    const site = document.getElementById("site");
+    const enterBtn = document.getElementById("enterBtn");
+
+    let loadingValue = 0;
+
+    const loadingInterval = setInterval(() => {
+
+        loadingValue += Math.floor(Math.random() * 8) + 2;
+
+        if (loadingValue >= 100) {
+
+            loadingValue = 100;
+
+            clearInterval(loadingInterval);
+
+            setTimeout(() => {
+
+                loading.classList.add("hidden");
+
+                setTimeout(() => {
+                    intro.style.display = "flex";
+                }, 700);
+
+            }, 500);
+
+        }
+
+        progress.style.width = loadingValue + "%";
+        percent.textContent = loadingValue + "%";
+
+    }, 120);
+
+
+    /* =========================
+       ENTER SITE
+    ========================= */
+
+    enterBtn.addEventListener("click", () => {
+
+        intro.style.opacity = "0";
+
+        setTimeout(() => {
+
+            intro.style.display = "none";
+            site.style.display = "block";
+
+            window.scrollTo({
+                top: 0,
+                behavior: "instant"
+            });
+
+        }, 800);
+
+    });
+
+
+    /* =========================
+       QUOTES
+    ========================= */
+
+    const quotes = [
+
+        "A conexão começou antes mesmo de você perceber.",
+
+        "Talvez a realidade seja apenas outra interface.",
+
+        "Você está sozinho mesmo quando está conectado.",
+
+        "Nem tudo que está na tela precisa ser entendido.",
+
+        "Existe um lugar onde pensamentos e dados se misturam.",
+
+        "A Wired nunca esteve realmente desligada.",
+
+        "Algumas memórias permanecem mesmo depois que tudo acaba.",
+
+        "Talvez olhar para dentro seja mais estranho do que olhar para fora.",
+
+        "Você entrou. Agora não existe botão para voltar ao começo.",
+
+        "Quem está olhando para quem através dessa tela?"
+
+    ];
+
+    let currentQuote = 0;
+
+    const quoteElement = document.getElementById("quote");
+    const quoteNumber = document.getElementById("quoteNumber");
+    const nextQuote = document.getElementById("nextQuote");
+
+    nextQuote.addEventListener("click", () => {
+
+        currentQuote++;
+
+        if (currentQuote >= quotes.length) {
+            currentQuote = 0;
+        }
+
+        quoteElement.style.opacity = "0";
+        quoteElement.style.transform = "translateY(10px)";
+
+        setTimeout(() => {
+
+            quoteElement.textContent = quotes[currentQuote];
+
+            quoteNumber.textContent =
+                "MEMORY " +
+                String(currentQuote + 1).padStart(3, "0");
+
+            quoteElement.style.opacity = "1";
+            quoteElement.style.transform = "translateY(0)";
+
+        }, 250);
+
+    });
+
+
+    /* =========================
+       GLITCH RANDOM
+    ========================= */
+
+    const glitchElements =
+        document.querySelectorAll(".glitch");
+
+    setInterval(() => {
+
+        glitchElements.forEach(element => {
+
+            if (Math.random() > 0.7) {
+
+                element.style.transform =
+                    `translate(
+                        ${Math.random() * 6 - 3}px,
+                        ${Math.random() * 4 - 2}px
+                    )`;
+
+                setTimeout(() => {
+                    element.style.transform = "";
+                }, 100);
+
+            }
+
+        });
+
+    }, 700);
+
+
+    /* =========================
+       MOUSE EFFECT
+    ========================= */
+
+    document.addEventListener("mousemove", (event) => {
+
+        const x =
+            (event.clientX / window.innerWidth - 0.5) * 2;
+
+        const y =
+            (event.clientY / window.innerHeight - 0.5) * 2;
+
+        const hero =
+            document.querySelector(".hero-content");
+
+        if (hero) {
+
+            hero.style.transform =
+                `translate(${x * 3}px, ${y * 3}px)`;
+
+        }
+
+    });
+
+
+    /* =========================
+       CONSOLE
+    ========================= */
+
+    console.log(
+        "%c LUIZ.EXE ",
+        "background:#000;color:#fff;font-size:20px;padding:10px;"
+    );
+
+    console.log(
+        "Connection to the Wired established."
+    );
+
+</script>
+```
+
+</body>
+</html>

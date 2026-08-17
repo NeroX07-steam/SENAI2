@@ -1,0 +1,257 @@
+:root {
+    --bg: #050505;
+    --card-bg: #111;
+    --primary: #00ff88;
+    --secondary: #00ccff;
+    --text: #e0e0e0;
+    --accent: #ff0055;
+    --font: 'Space Grotesk', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ── Efeitos de Tela ── */
+.scanline {
+    width: 100%; height: 100px; z-index: 10;
+    background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 50%, rgba(0,0,0,0) 100%);
+    opacity: 0.1; position: fixed; bottom: 100%;
+    animation: scanline 6s linear infinite; pointer-events: none;
+}
+
+@keyframes scanline {
+    0% { bottom: 100%; }
+    100% { bottom: -100%; }
+}
+
+.noise {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: url('https://grainy-gradients.vercel.app/noise.svg');
+    opacity: 0.05; pointer-events: none; z-index: 9;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Hero ── */
+.hero {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.pombo-avatar {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+}
+
+.pombo-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    border: 2px solid var(--primary);
+    background: #1a1a1a;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+.glow {
+    position: absolute; inset: -10px;
+    background: var(--primary);
+    filter: blur(25px);
+    opacity: 0.15;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.status-online {
+    position: absolute; bottom: 5px; right: 5px;
+    width: 18px; height: 18px;
+    background: var(--primary);
+    border: 3px solid var(--bg);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.glitch {
+    position: relative;
+}
+
+.subtitle {
+    color: var(--secondary);
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+/* ── Chat ── */
+.chat-section {
+    background: var(--card-bg);
+    border: 1px solid #222;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin-bottom: 2rem;
+}
+
+.chat-window {
+    height: 350px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-right: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.chat-window::-webkit-scrollbar { width: 4px; }
+.chat-window::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+.msg {
+    max-width: 85%;
+    padding: 0.8rem 1.2rem;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.msg.pombo {
+    align-self: flex-start;
+    background: #1a1a1a;
+    border-left: 3px solid var(--primary);
+    color: #fff;
+}
+
+.msg.user {
+    align-self: flex-end;
+    background: var(--primary);
+    color: #000;
+    font-weight: 500;
+}
+
+.msg.system {
+    align-self: center;
+    background: transparent;
+    color: #555;
+    font-size: 0.75rem;
+    font-family: monospace;
+}
+
+.input-area {
+    display: flex;
+    gap: 0.8rem;
+}
+
+input {
+    flex: 1;
+    background: #000;
+    border: 1px solid #333;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    color: #fff;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus {
+    border-color: var(--primary);
+}
+
+button {
+    background: var(--primary);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s, filter 0.2s;
+}
+
+button:hover {
+    filter: brightness(1.1);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button svg {
+    width: 24px;
+    height: 24px;
+    color: #000;
+}
+
+/* ── Features ── */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.card {
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+}
+
+.card:hover {
+    border-color: var(--primary);
+}
+
+.card h3 {
+    color: var(--primary);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.footer {
+    text-align: center;
+    padding: 2rem 0;
+    border-top: 1px solid #111;
+    color: #444;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+    h1 { font-size: 2.5rem; }
+}

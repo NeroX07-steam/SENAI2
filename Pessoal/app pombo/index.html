@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pombo GPT - O Mestre da Resenha</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Efeitos de tela retrô -->
+    <div class="scanline"></div>
+    <div class="noise"></div>
+
+    <main class="container">
+        <!-- Cabeçalho com o Avatar do Pombo -->
+        <header class="hero">
+            <div class="pombo-avatar">
+                <div class="glow"></div>
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=pombo&backgroundColor=b6e3f4" alt="Pombo IA">
+                <div class="status-online"></div>
+            </div>
+            <h1 class="glitch" data-text="POMBO GPT">POMBO GPT</h1>
+            <p class="subtitle">A Inteligência Artificial que não pede milho, pede atenção.</p>
+        </header>
+
+        <!-- Seção de Chat -->
+        <section class="chat-section">
+            <div class="chat-window" id="chatWindow">
+                <div class="msg system">
+                    <span class="timestamp">[10:42:01]</span>
+                    <span class="content">Sistema: Pombo de IA conectado. Protocolo 'Resenha Máxima' ativado.</span>
+                </div>
+                <div class="msg pombo">
+                    <span class="content">E aí, meu nobre? O que manda na praça hoje? Manda a dúvida que eu te dou a letra. 🐦⚡</span>
+                </div>
+            </div>
+
+            <!-- Campo de Entrada -->
+            <div class="input-area">
+                <input type="text" id="userInput" placeholder="Manda a braba aqui..." autocomplete="off">
+                <button id="sendBtn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Cards de Destaque -->
+        <section class="features">
+            <div class="card">
+                <h3>99% Resenha</h3>
+                <p>Treinado com os maiores fios do Twitter e grupos de zap.</p>
+            </div>
+            <div class="card">
+                <h3>1% Pombo</h3>
+                <p>Cuidado com o que você deixa no parapeito do código.</p>
+            </div>
+            <div class="card">
+                <h3>Latência Zero</h3>
+                <p>Respostas mais rápidas que pombo fugindo de chinelo.</p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>© 2026 Pombo IA Industries - "Cagando para os seus problemas, mas com estilo."</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
