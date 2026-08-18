@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="CodeStudy - Plataforma para aprender programação"
+    >
+
+    <meta
+        name="theme-color"
+        content="#7657ff"
+    >
+
+    <title>CodeStudy | Aprenda Programação</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         TELA DE ESCOLHA DE CONTA
+    ====================================================== -->
+
+    <div
+        class="account-screen"
+        id="accountScreen"
+    >
+
+        <div class="account-container">
+
+            <div class="account-logo">
+                &lt;/&gt;
+            </div>
+
+
+            <span class="page-badge">
+                🚀 CODESTUDY
+            </span>
+
+
+            <h1>
+                Quem está estudando?
+            </h1>
+
+
+            <p>
+                Escolha sua conta para entrar
+                e carregar seu estudo.
+            </p>
+
+
+            <div class="account-list">
+
+
+                <!-- LUIZ -->
+
+                <button
+                    class="account-card"
+                    data-account="luiz"
+                >
+
+                    <div class="account-avatar">
+                        👨‍💻
+                    </div>
+
+
+                    <div class="account-info">
+
+                        <strong>
+                            Luiz
+                        </strong>
+
+                        <small>
+                            Programador
+                        </small>
+
+                    </div>
+
+
+                    <span class="account-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+
+                <!-- NAIRELIS -->
+
+                <button
+                    class="account-card"
+                    data-account="nairelis"
+                >
+
+                    <div class="account-avatar">
+                        🧑‍🏫
+                    </div>
+
+
+                    <div class="account-info">
+
+                        <strong>
+                            Nairelis
+                        </strong>
+
+                        <small>
+                            Aprendendo do zero
+                        </small>
+
+                    </div>
+
+
+                    <span class="account-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+
+                <!-- JULYA -->
+
+                <button
+                    class="account-card"
+                    data-account="julya"
+                >
+
+                    <div class="account-avatar">
+                        🧒
+                    </div>
+
+
+                    <div class="account-info">
+
+                        <strong>
+                            Julya
+                        </strong>
+
+                        <small>
+                            Começando a programar
+                        </small>
+
+                    </div>
+
+
+                    <span class="account-arrow">
+                        →
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                &lt;/&gt;
+            </div>
+
+            <div class="logo-name">
+                Code<span>Study</span>
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+
+            <!-- INÍCIO -->
+
+            <button
+                class="nav-button active"
+                data-page="home"
+            >
+
+                <span>
+                    🏠
+                </span>
+
+                <span>
+                    Início
+                </span>
+
+            </button>
+
+
+
+            <!-- ESTUDO -->
+
+            <button
+                class="nav-button"
+                data-page="study"
+            >
+
+                <span>
+                    📖
+                </span>
+
+                <span>
+                    Estudo
+                </span>
+
+            </button>
+
+
+
+            <!-- AULAS -->
+
+            <button
+                class="nav-button"
+                data-page="courses"
+            >
+
+                <span>
+                    📚
+                </span>
+
+                <span>
+                    Aulas
+                </span>
+
+            </button>
+
+
+
+            <!-- EXERCÍCIOS -->
+
+            <button
+                class="nav-button"
+                data-page="exercises"
+            >
+
+                <span>
+                    🧩
+                </span>
+
+                <span>
+                    Exercícios
+                </span>
+
+            </button>
+
+
+
+            <!-- QUIZ -->
+
+            <button
+                class="nav-button"
+                data-page="quiz"
+            >
+
+                <span>
+                    🧠
+                </span>
+
+                <span>
+                    Quiz
+                </span>
+
+            </button>
+
+
+
+            <!-- PROGRESSO -->
+
+            <button
+                class="nav-button"
+                data-page="progress"
+            >
+
+                <span>
+                    📊
+                </span>
+
+                <span>
+                    Progresso
+                </span>
+
+            </button>
+
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+
+            <!-- TROCAR CONTA -->
+
+            <button
+                class="theme-button"
+                id="changeAccountButton"
+            >
+
+                <span>
+                    👤
+                </span>
+
+                <span>
+                    Trocar conta
+                </span>
+
+            </button>
+
+
+            <!-- TEMA -->
+
+            <button
+                class="theme-button"
+                id="themeButton"
+            >
+
+                <span id="themeIcon">
+                    ☀️
+                </span>
+
+                <span id="themeText">
+                    Tema claro
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+
+                <!-- MENU MOBILE -->
+
+                <button
+                    class="mobile-menu"
+                    id="mobileMenu"
+                    aria-label="Abrir menu"
+                >
+                    ☰
+                </button>
+
+
+
+                <!-- PESQUISA -->
+
+                <div class="search-box">
+
+                    <span class="search-icon">
+                        🔎
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Pesquisar aulas, temas..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- USUÁRIO -->
+
+            <div class="user-area">
+
+                <div class="user-information">
+
+                    <strong
+                        id="currentUserName"
+                    >
+                        Luiz
+                    </strong>
+
+
+                    <small
+                        id="currentUserLevel"
+                    >
+                        Programador
+                    </small>
+
+                </div>
+
+
+                <div
+                    class="user-avatar"
+                    id="userAvatar"
+                >
+                    L
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =====================================================
+             PÁGINA INÍCIO
+        ====================================================== -->
+
+        <section
+            class="page active"
+            id="home"
+        >
+
+
+            <!-- HERO -->
+
+            <div class="hero-section">
+
+                <div class="hero-content">
+
+                    <span class="hero-badge">
+                        🚀 CENTRAL DE PROGRAMAÇÃO
+                    </span>
+
+
+                    <h1>
+
+                        Aprenda programação
+                        <span>do seu jeito.</span>
+
+                    </h1>
+
+
+                    <p>
+
+                        Estude HTML, CSS, JavaScript,
+                        Python e C++ com explicações,
+                        exercícios, desafios e projetos.
+
+                    </p>
+
+
+                    <div class="hero-buttons">
+
+                        <button
+                            class="primary-button"
+                            id="startLearningButton"
+                        >
+
+                            Começar a estudar
+
+                            <span>
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            class="secondary-button"
+                            id="viewProgressButton"
+                        >
+
+                            Ver meu progresso
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CÓDIGO DECORATIVO -->
+
+                <div class="hero-code">
+
+                    <div class="code-header">
+
+                        <div class="code-dots">
+
+                            <span></span>
+                            <span></span>
+                            <span></span>
+
+                        </div>
+
+
+                        <span>
+                            estudo.js
+                        </span>
+
+                    </div>
+
+
+                    <pre><code><span class="code-purple">const</span> estudante = {
+
+    nome: <span class="code-green">"Você"</span>,
+
+    objetivo:
+        <span class="code-green">"aprender programação"</span>,
+
+    nivel: <span class="code-orange">1</span>
+
+};
+
+<span class="code-blue">estudar</span>();</code></pre>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PROGRESSO -->
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Seu progresso
+                    </h2>
+
+
+                    <p>
+                        Continue de onde você parou.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="overall-progress-card">
+
+                <div class="overall-progress-top">
+
+                    <div>
+
+                        <strong
+                            id="homeProgressPercent"
+                        >
+                            0%
+                        </strong>
+
+
+                        <span>
+                            concluído
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="progress-message"
+                        id="homeProgressMessage"
+                    >
+                        Comece sua primeira aula! 🚀
+                    </div>
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-fill"
+                        id="homeProgressBar"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- LINGUAGENS -->
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Linguagens
+                    </h2>
+
+
+                    <p>
+                        Escolha o que você quer estudar.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="language-grid"
+                id="homeLanguageGrid"
+            ></div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             PÁGINA DE ESTUDO
+        ====================================================== -->
+
+        <section
+            class="page"
+            id="study"
+        >
+
+
+            <div class="page-title">
+
+                <span class="page-badge">
+                    📖 ESTUDO
+                </span>
+
+
+                <h1>
+                    Área de estudo
+                </h1>
+
+
+                <p>
+                    Aprenda os conceitos antes de partir
+                    para os desafios.
+                </p>
+
+            </div>
+
+
+
+            <!-- LINGUAGENS PARA ESTUDO -->
+
+            <div
+                class="study-language-grid"
+                id="studyLanguageGrid"
+            ></div>
+
+
+
+            <!-- CONTEÚDO -->
+
+            <div
+                class="study-content"
+                id="studyContent"
+            >
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        📖
+                    </div>
+
+
+                    <h2>
+                        Escolha uma linguagem
+                    </h2>
+
+
+                    <p>
+                        Escolha uma linguagem acima
+                        para começar a estudar.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             PÁGINA DE AULAS
+        ====================================================== -->
+
+        <section
+            class="page"
+            id="courses"
+        >
+
+
+            <div class="page-title">
+
+                <span class="page-badge">
+                    📚 AULAS
+                </span>
+
+
+                <h1>
+                    Aulas de programação
+                </h1>
+
+
+                <p>
+                    Escolha uma linguagem e avance pelos níveis.
+                </p>
+
+            </div>
+
+
+
+            <!-- PERFIL DE EXPLICAÇÃO -->
+
+            <div class="student-selector">
+
+                <div class="student-selector-title">
+
+                    <span>
+                        👤
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Tipo de explicação
+                        </h3>
+
+
+                        <p>
+                            Cada perfil aprende de um jeito diferente.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="student-options">
+
+
+                    <!-- LUIZ -->
+
+                    <button
+                        class="student-option"
+                        data-student="luiz"
+                    >
+
+                        <span class="student-option-icon">
+                            👨‍💻
+                        </span>
+
+
+                        <span>
+
+                            <strong>
+                                Luiz
+                            </strong>
+
+
+                            <small>
+                                Direta e rápida
+                            </small>
+
+                        </span>
+
+                    </button>
+
+
+
+                    <!-- NAIRELIS -->
+
+                    <button
+                        class="student-option"
+                        data-student="nairelis"
+                    >
+
+                        <span class="student-option-icon">
+                            🧑‍🏫
+                        </span>
+
+
+                        <span>
+
+                            <strong>
+                                Nairelis
+                            </strong>
+
+
+                            <small>
+                                Desde o zero e detalhada
+                            </small>
+
+                        </span>
+
+                    </button>
+
+
+
+                    <!-- JULYA -->
+
+                    <button
+                        class="student-option"
+                        data-student="julya"
+                    >
+
+                        <span class="student-option-icon">
+                            🧒
+                        </span>
+
+
+                        <span>
+
+                            <strong>
+                                Julya
+                            </strong>
+
+
+                            <small>
+                                Bem simples
+                            </small>
+
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- LINGUAGENS -->
+
+            <div class="section-header courses-header">
+
+                <div>
+
+                    <h2>
+                        Linguagens
+                    </h2>
+
+
+                    <p>
+                        Cada linguagem possui 3 níveis.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="language-grid"
+                id="courseLanguageGrid"
+            ></div>
+
+
+
+            <!-- NÍVEIS -->
+
+            <div
+                class="levels-area"
+                id="levelsArea"
+            >
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        🎯
+                    </div>
+
+
+                    <h2>
+                        Escolha uma linguagem
+                    </h2>
+
+
+                    <p>
+                        Depois você poderá escolher entre
+                        Nível 1, Nível 2 e Nível 3.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- AULA / QUESTÃO ATUAL -->
+
+            <div
+                class="lesson-area"
+                id="lessonArea"
+            ></div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             PÁGINA DE EXERCÍCIOS
+        ====================================================== -->
+
+        <section
+            class="page"
+            id="exercises"
+        >
+
+
+            <div class="page-title">
+
+                <span class="page-badge">
+                    🧩 PRÁTICA
+                </span>
+
+
+                <h1>
+                    Exercícios
+                </h1>
+
+
+                <p>
+                    Pratique sem ficar olhando o gabarito.
+                </p>
+
+            </div>
+
+
+
+            <!-- FILTROS -->
+
+            <div class="exercise-filter">
+
+                <button
+                    class="filter-button active"
+                    data-filter="all"
+                >
+                    Todos
+                </button>
+
+
+                <button
+                    class="filter-button"
+                    data-filter="HTML"
+                >
+                    HTML
+                </button>
+
+
+                <button
+                    class="filter-button"
+                    data-filter="CSS"
+                >
+                    CSS
+                </button>
+
+
+                <button
+                    class="filter-button"
+                    data-filter="JavaScript"
+                >
+                    JavaScript
+                </button>
+
+
+                <button
+                    class="filter-button"
+                    data-filter="Python"
+                >
+                    Python
+                </button>
+
+
+                <button
+                    class="filter-button"
+                    data-filter="C++"
+                >
+                    C++
+                </button>
+
+            </div>
+
+
+
+            <!-- LISTA -->
+
+            <div
+                class="exercise-list"
+                id="exerciseList"
+            ></div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             PÁGINA DE QUIZ
+        ====================================================== -->
+
+        <section
+            class="page"
+            id="quiz"
+        >
+
+
+            <div class="page-title">
+
+                <span class="page-badge">
+                    🧠 QUIZ
+                </span>
+
+
+                <h1>
+                    Quiz de programação
+                </h1>
+
+
+                <p>
+                    Teste o que você aprendeu.
+                </p>
+
+            </div>
+
+
+            <div
+                class="quiz-container"
+                id="quizContainer"
+            ></div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             PÁGINA DE PROGRESSO
+        ====================================================== -->
+
+        <section
+            class="page"
+            id="progress"
+        >
+
+
+            <div class="page-title">
+
+                <span class="page-badge">
+                    📊 PROGRESSO
+                </span>
+
+
+                <h1>
+                    Seu desempenho
+                </h1>
+
+
+                <p>
+                    Veja tudo o que você já conquistou.
+                </p>
+
+            </div>
+
+
+
+            <!-- ESTATÍSTICAS -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📚
+                    </div>
+
+
+                    <strong id="statLessons">
+                        0
+                    </strong>
+
+
+                    <span>
+                        Questões concluídas
+                    </span>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        🧩
+                    </div>
+
+
+                    <strong id="statExercises">
+                        0
+                    </strong>
+
+
+                    <span>
+                        Exercícios concluídos
+                    </span>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        🧠
+                    </div>
+
+
+                    <strong id="statQuiz">
+                        0%
+                    </strong>
+
+
+                    <span>
+                        Melhor quiz
+                    </span>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ⭐
+                    </div>
+
+
+                    <strong id="statOverall">
+                        0%
+                    </strong>
+
+
+                    <span>
+                        Progresso geral
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PROGRESSO POR LINGUAGEM -->
+
+            <div class="progress-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Progresso por linguagem
+                        </h2>
+
+
+                        <p>
+                            Acompanhe cada curso.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="progress-language-list"
+                    id="progressLanguageList"
+                ></div>
+
+            </div>
+
+
+
+            <!-- PROGRESSO POR NÍVEL -->
+
+            <div class="progress-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Progresso por nível
+                        </h2>
+
+
+                        <p>
+                            Veja quais níveis já foram liberados.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="level-progress-list"
+                    id="levelProgressList"
+                ></div>
+
+            </div>
+
+
+
+            <!-- XP -->
+
+            <div class="progress-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            ⭐ Experiência
+                        </h2>
+
+
+                        <p>
+                            Ganhe XP resolvendo questões e exercícios.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="overall-progress-card">
+
+                    <div
+                        class="overall-progress-top"
+                    >
+
+                        <div>
+
+                            <strong
+                                id="xpAmount"
+                            >
+                                0 XP
+                            </strong>
+
+                            <span>
+                                experiência
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            class="progress-message"
+                            id="xpLevel"
+                        >
+                            Nível 1
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill"
+                            id="xpProgressBar"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CONQUISTAS -->
+
+            <div class="achievements-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            🏆 Conquistas
+                        </h2>
+
+
+                        <p>
+                            Continue estudando para desbloquear.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="achievements-grid"
+                    id="achievementsGrid"
+                ></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         MODAL
+    ====================================================== -->
+
+    <div
+        class="modal-overlay"
+        id="modalOverlay"
+    >
+
+        <div
+            class="modal"
+            id="modal"
+        >
+
+            <button
+                class="modal-close"
+                id="modalClose"
+                aria-label="Fechar"
+            >
+                ×
+            </button>
+
+
+            <div
+                id="modalContent"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         TOAST
+    ====================================================== -->
+
+    <div
+        class="toast"
+        id="toast"
+    >
+
+        <span id="toastIcon">
+            ✅
+        </span>
+
+
+        <span id="toastMessage">
+            Tudo certo!
+        </span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
