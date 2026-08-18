@@ -1,119 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#7c5cff" />
-  <title>CodeStudy — Central de Programação</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#6c5ce7">
+  <title>CodeStudy • Aprenda programação</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <div id="app" class="app">
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" aria-live="polite"></div>
 
-    <section id="profileScreen" class="screen profile-screen active">
-      <div class="profile-glow glow-one"></div>
-      <div class="profile-glow glow-two"></div>
-      <div class="profile-wrap">
-        <div class="brand brand-center">
-          <div class="brand-mark">&lt;/&gt;</div>
-          <div>
-            <h1>CodeStudy</h1>
-            <p>Central de Programação</p>
-          </div>
-        </div>
-
-        <div class="hero-card">
-          <span class="eyebrow">📚 Seu espaço para aprender</span>
-          <h2>Quem vai estudar hoje?</h2>
-          <p>Escolha uma conta para carregar o progresso certo.</p>
-
-          <div id="profileOptions" class="profile-grid"></div>
-
-          <button id="continueLastProfile" class="btn btn-ghost hidden">
-            ↩ Continuar como <span id="lastProfileName"></span>
-          </button>
-        </div>
-
-        <div class="feature-row">
-          <div>💾 Progresso salvo</div>
-          <div>🧠 Quiz e exercícios</div>
-          <div>🧩 Respostas múltiplas</div>
-          <div>🌙 Modo escuro</div>
-        </div>
+  <section id="authScreen" class="screen auth-screen">
+    <div class="auth-card glass">
+      <div class="brand big"><span class="brand-mark">&lt;/&gt;</span><div><strong>CodeStudy</strong><small>aprenda programando</small></div></div>
+      <p class="muted center">Um lugar para estudar, praticar e conversar sobre programação.</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth-tab="login">Entrar</button>
+        <button class="auth-tab" data-auth-tab="signup">Criar conta</button>
       </div>
-    </section>
-
-    <div id="mainShell" class="main-shell hidden">
-      <aside id="sidebar" class="sidebar">
-        <div class="sidebar-top">
-          <div class="brand">
-            <div class="brand-mark">&lt;/&gt;</div>
-            <div>
-              <strong>CodeStudy</strong>
-              <span>Central de Programação</span>
-            </div>
-          </div>
-          <button id="mobileClose" class="icon-btn mobile-only" title="Fechar menu">✕</button>
-        </div>
-
-        <div class="current-profile" id="currentProfileCard"></div>
-
-        <nav class="nav-menu">
-          <button class="nav-btn active" data-view="dashboard">🏠 <span>Início</span></button>
-          <button class="nav-btn" data-view="study">📖 <span>Estudo</span></button>
-          <button class="nav-btn" data-view="lessons">🎓 <span>Aulas</span></button>
-          <button class="nav-btn" data-view="exercises">🧩 <span>Exercícios</span></button>
-          <button class="nav-btn" data-view="quiz">🧠 <span>Quiz</span></button>
-          <button class="nav-btn" data-view="progress">📊 <span>Progresso</span></button>
-        </nav>
-
-        <div class="sidebar-bottom">
-          <button id="themeToggle" class="nav-btn">🌙 <span>Alternar tema</span></button>
-          <button id="changeProfile" class="nav-btn">👤 <span>Trocar perfil</span></button>
-        </div>
-      </aside>
-
-      <main class="content-area">
-        <header class="topbar">
-          <button id="mobileMenu" class="icon-btn mobile-only" title="Abrir menu">☰</button>
-          <div class="topbar-title">
-            <div>
-              <span class="muted">Olá,</span>
-              <strong id="topProfileName">Luiz</strong>
-            </div>
-            <span id="topProfileTag" class="profile-tag"></span>
-          </div>
-          <div class="top-actions">
-            <button id="searchFocus" class="icon-btn" title="Pesquisar">🔎</button>
-            <div class="xp-pill">⭐ <span id="headerXP">0</span> XP</div>
-          </div>
-        </header>
-
-        <div id="searchBar" class="search-bar hidden">
-          <input id="searchInput" type="search" placeholder="Pesquisar linguagem, conceito ou aula..." />
-          <button id="searchClose" class="icon-btn">✕</button>
-          <div id="searchResults" class="search-results"></div>
-        </div>
-
-        <section id="dashboardView" class="view active"></section>
-        <section id="studyView" class="view"></section>
-        <section id="lessonsView" class="view"></section>
-        <section id="exercisesView" class="view"></section>
-        <section id="quizView" class="view"></section>
-        <section id="progressView" class="view"></section>
-      </main>
-    </div>
-
-    <div id="modal" class="modal hidden" aria-hidden="true">
-      <div class="modal-backdrop" data-close-modal="true"></div>
-      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <button id="modalClose" class="modal-close">✕</button>
-        <div id="modalContent"></div>
+      <form id="loginForm" class="auth-form">
+        <label>E-mail<input id="loginEmail" type="email" required placeholder="seu@email.com"></label>
+        <label>Senha<input id="loginPassword" type="password" required placeholder="••••••••"></label>
+        <button class="primary wide" type="submit">Entrar</button>
+      </form>
+      <form id="signupForm" class="auth-form hidden">
+        <label>Nome<input id="signupName" type="text" required maxlength="24" placeholder="Seu nome"></label>
+        <label>E-mail<input id="signupEmail" type="email" required placeholder="seu@email.com"></label>
+        <label>Senha<input id="signupPassword" type="password" minlength="6" required placeholder="mínimo 6 caracteres"></label>
+        <button class="primary wide" type="submit">Criar conta</button>
+      </form>
+      <div id="demoBox" class="demo-box">
+        <div><strong>Quer testar agora?</strong><span>O site funciona em modo demo sem banco.</span></div>
+        <button id="demoLogin" class="secondary">Entrar em demo</button>
       </div>
+      <p id="backendStatus" class="tiny center">Verificando conexão...</p>
     </div>
-  </div>
+  </section>
 
+  <section id="appScreen" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">&lt;/&gt;</span><div><strong>CodeStudy</strong><small>central de programação</small></div></div>
+      <div class="profile-mini">
+        <div id="avatar" class="avatar">L</div>
+        <div><strong id="profileName">Aluno</strong><span id="profileRole">Estudante</span></div>
+        <button id="logoutBtn" class="icon-btn" title="Sair">↪</button>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn active" data-page="home">🏠<span>Início</span></button>
+        <button class="nav-btn" data-page="study">📚<span>Estudar</span></button>
+        <button class="nav-btn" data-page="chat">💬<span>Comunidade</span><b id="chatBadge" class="badge hidden">0</b></button>
+        <button class="nav-btn" data-page="progress">📊<span>Meu progresso</span></button>
+        <button class="nav-btn" data-page="profile">👤<span>Perfil</span></button>
+      </nav>
+      <div class="sidebar-foot">
+        <button id="themeBtn" class="ghost wide">🌙 Alternar tema</button>
+        <small>Feito para aprender sem medo de errar.</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><div class="eyebrow" id="pageEyebrow">COMECE POR AQUI</div><h1 id="pageTitle">Olá!</h1></div>
+        <div class="top-actions"><div class="xp-pill">⭐ <span id="xpTop">0</span> XP</div><button id="mobileMenu" class="icon-btn mobile-only">☰</button></div>
+      </header>
+
+      <section id="page-home" class="page">
+        <div class="hero grid-2">
+          <div class="hero-card glass">
+            <span class="pill purple">🚀 Jornada de programação</span>
+            <h2>Aprenda do zero sem precisar saber nada.</h2>
+            <p>Antes de responder, veja uma explicação simples. Depois tente, veja a resposta e ganhe XP.</p>
+            <div class="hero-actions"><button class="primary" data-page-jump="study">Começar uma aula</button><button class="secondary" data-page-jump="chat">Ir para o chat</button></div>
+          </div>
+          <div class="stats-card glass">
+            <div class="stat-head"><span>Seu nível</span><strong id="levelLabel">Nível 1</strong></div>
+            <div class="level-ring"><span id="levelPct">0%</span></div>
+            <div class="tiny">Faltam <strong id="nextLevelXP">100 XP</strong> para o próximo nível</div>
+          </div>
+        </div>
+
+        <div class="section-head"><div><h3>Continue estudando</h3><p>Escolha uma linguagem e siga no seu ritmo.</p></div><button class="text-btn" data-page-jump="study">ver todas →</button></div>
+        <div id="homeLanguages" class="language-grid"></div>
+
+        <div class="section-head"><div><h3>Você está aprendendo</h3><p>Seu progresso fica salvo no navegador no modo demo ou na conta do Supabase.</p></div></div>
+        <div class="progress-card glass"><div class="progress-row"><span>Progresso geral</span><strong id="overallPct">0%</strong></div><div class="progress-track"><div id="overallBar" class="progress-fill"></div></div><div class="mini-stats"><span>✅ <b id="lessonsDone">0</b> aulas</span><span>🧩 <b id="exercisesDone">0</b> exercícios</span><span>💬 <b id="messagesCount">0</b> mensagens</span></div></div>
+      </section>
+
+      <section id="page-study" class="page hidden">
+        <div class="section-head"><div><h2>📚 Biblioteca de estudo</h2><p>Começamos por conceitos básicos e construímos passo a passo.</p></div><div class="select-wrap"><select id="languageSelect"></select></div></div>
+        <div id="lessonList" class="lesson-list"></div>
+      </section>
+
+      <section id="page-lesson" class="page hidden">
+        <button class="back-btn" data-page-jump="study">← voltar para as aulas</button>
+        <div id="lessonView"></div>
+      </section>
+
+      <section id="page-chat" class="page hidden">
+        <div class="chat-layout">
+          <div class="channels glass"><div class="channel-title">CANAIS</div><button class="channel active" data-channel="geral"># geral</button><button class="channel" data-channel="duvidas"># dúvidas</button><button class="channel" data-channel="desafios"># desafios</button><div class="online-box"><div class="channel-title">ONLINE</div><div id="onlineList"><span class="online-dot"></span> você</div></div></div>
+          <div class="chat-main glass"><div class="chat-head"><div><strong id="channelTitle"># geral</strong><span id="channelSub">Converse com outras pessoas estudando programação.</span></div><span id="connectionState" class="status-dot offline">modo demo</span></div><div id="messages" class="messages"></div><form id="messageForm" class="message-form"><textarea id="messageInput" rows="1" maxlength="1000" placeholder="Digite uma mensagem... (Enter envia)" required></textarea><button class="primary" type="submit">Enviar ↗</button></form></div>
+        </div>
+      </section>
+
+      <section id="page-progress" class="page hidden">
+        <div class="section-head"><div><h2>📊 Meu progresso</h2><p>Veja o que você já aprendeu.</p></div></div>
+        <div id="progressGrid" class="progress-grid"></div>
+        <div class="glass achievement-card"><h3>🏆 Conquistas</h3><div id="achievements" class="achievement-list"></div></div>
+      </section>
+
+      <section id="page-profile" class="page hidden">
+        <div class="profile-page glass"><div id="profileAvatarBig" class="avatar xl">L</div><div><h2 id="profileBigName">Aluno</h2><p id="profileBigEmail" class="muted">modo demo</p><p class="tiny">Seu perfil pode receber avatar, bio, amigos e mensagens privadas em uma próxima etapa.</p></div></div>
+        <div class="profile-editor glass"><h3>Preferências</h3><label>Nome de exibição<input id="displayNameInput" maxlength="24"></label><label>Modo de explicação<select id="explainMode"><option value="child">🌱 Bem simples (para quem nunca programou)</option><option value="normal">📘 Normal</option><option value="deep">🧠 Mais detalhado</option></select></label><button id="saveProfileBtn" class="primary">Salvar</button></div>
+      </section>
+    </main>
+  </section>
+
+  <dialog id="feedbackDialog" class="modal"><div class="modal-box"><button class="modal-close" data-close-dialog="feedbackDialog">×</button><div id="feedbackContent"></div></div></dialog>
+  <dialog id="answerDialog" class="modal"><div class="modal-box"><button class="modal-close" data-close-dialog="answerDialog">×</button><div id="answerContent"></div></div></dialog>
+
+  <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

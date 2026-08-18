@@ -1,577 +1,108 @@
-/* =========================================================
-   CodeStudy — JavaScript principal
-   Tudo roda no navegador e usa localStorage para salvar progresso.
-========================================================= */
+const cfg=window.CODESTUDY_CONFIG||{};
+const hasSupabase=Boolean(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY&&!cfg.SUPABASE_URL.includes('COLE_')&&!cfg.SUPABASE_ANON_KEY.includes('COLE_'));
+const sb=hasSupabase?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY):null;
 
-const STORAGE_KEY = 'codestudy-v2';
-const PROFILES = {
-  luiz: { name: 'Luiz', avatar: '👨‍💻', tag: 'Aprende direto ao ponto', style: 'Explicações objetivas e desafios maiores.' },
-  julya: { name: 'Julya', avatar: '🧒', tag: 'Aprende de forma simples', style: 'Explicações como se fosse uma conversa com uma criança.' },
-  nairelis: { name: 'Nairelis', avatar: '🧑‍🏫', tag: 'Aprende com detalhes', style: 'Explicações completas e passo a passo.' }
+const languages={
+ html:{name:'HTML',icon:'🌐',desc:'Estrutura da página',topics:[
+  ['Tags','Uma tag diz ao navegador o que um pedaço do conteúdo representa.','<h1>Olá!</h1>','Em HTML, <h1> é usado principalmente para:',[['a','mostrar um título'],['b','mudar a cor'],['c','fazer uma conta']], 'a','<h1> representa um título principal.'],
+  ['Atributos','Atributos adicionam informações extras a uma tag.','<img src="foto.jpg" alt="Foto">','No exemplo, o atributo alt serve para:',[['a','descrever a imagem'],['b','deixar a imagem maior'],['c','criar um botão']], 'a','alt ajuda a descrever a imagem e melhora acessibilidade.'],
+  ['Links','A tag <a> cria links para outras páginas.','<a href="https://exemplo.com">Abrir</a>','Qual atributo indica o destino do link?',[['a','href'],['b','src'],['c','link']], 'a','href aponta para o endereço de destino.'],
+  ['Formulários','Formulários recebem dados do usuário.','<input type="text">','Qual tag é usada para receber texto simples?', [['a','input'],['b','p'],['c','section']], 'a','input cria campos de entrada.'],
+  ['Semântica','Tags semânticas explicam a função do conteúdo.','<header>...</header>','Qual é um exemplo de tag semântica?', [['a','header'],['b','div'],['c','span']], 'a','header, main e footer dão significado à estrutura.'] ]},
+ css:{name:'CSS',icon:'🎨',desc:'Aparência e layout',topics:[
+  ['Seletores','Seletores dizem quais elementos receberão estilos.','p { color: red; }','O seletor do exemplo é:',[['a','p'],['b','red'],['c','color']], 'a','p seleciona todos os elementos <p>.'],
+  ['Cores','A propriedade color muda a cor do texto.','h1 { color: purple; }','Qual propriedade muda o texto?',[['a','color'],['b','background'],['c','font']], 'a','color altera a cor do conteúdo de texto.'],
+  ['Box model','Cada elemento possui conteúdo, padding, border e margin.','div { padding: 20px; }','O padding é o espaço:',[['a','entre conteúdo e borda'],['b','fora da borda'],['c','entre páginas']], 'a','padding cria espaço interno.'],
+  ['Flexbox','Flexbox ajuda a alinhar elementos em uma dimensão.','.menu { display:flex; }','Qual propriedade ativa o Flexbox?',[['a','display: flex'],['b','position:flex'],['c','layout:flex']], 'a','display:flex cria um flex container.'],
+  ['Grid','CSS Grid organiza páginas em linhas e colunas.','.cards { display:grid; }','Grid é útil principalmente para:',[['a','layouts em linhas e colunas'],['b','senhas'],['c','banco de dados']], 'a','Grid é excelente para layouts bidimensionais.'] ]},
+ js:{name:'JavaScript',icon:'⚡',desc:'Lógica e interatividade',topics:[
+  ['Variáveis','Variáveis guardam valores que o programa pode usar.','let idade = 15;','Qual comando cria uma variável que pode receber novo valor?',[['a','let'],['b','html'],['c','style']], 'a','let declara uma variável reatribuível.'],
+  ['Tipos de dados','Strings são textos; números são valores numéricos.','const nome = "Luiz";','"Luiz" é um:',[['a','string'],['b','number'],['c','boolean']], 'a','Texto entre aspas é uma string.'],
+  ['if / else','Condicionais deixam o programa tomar decisões.','if (idade >= 18) { ... }','Qual palavra inicia uma condição?',[['a','if'],['b','loop'],['c','case']], 'a','if testa uma condição.'],
+  ['Loops','Loops repetem um bloco de código.','for (let i=0;i<3;i++) {}','Qual estrutura é usada para repetir?',[['a','for'],['b','title'],['c','color']], 'a','for é um laço de repetição.'],
+  ['Funções','Funções agrupam uma tarefa que pode ser chamada depois.','function soma(a,b){ return a+b; }','Uma função serve para:',[['a','reaproveitar uma lógica'],['b','trocar o monitor'],['c','criar o banco sozinho']], 'a','Funções evitam repetir a mesma lógica.'],
+  ['DOM','O DOM permite que JavaScript controle elementos HTML.','document.querySelector("h1")','Qual objeto representa a página HTML?',[['a','document'],['b','window.css'],['c','htmlFile']], 'a','document é a porta de entrada para o DOM.'] ]},
+ python:{name:'Python',icon:'🐍',desc:'Sintaxe simples e poderosa',topics:[
+  ['print','print mostra informações no console.','print("Olá")','Qual função mostra texto?',[['a','print'],['b','show'],['c','console']], 'a','print exibe algo no console.'],
+  ['Variáveis','Python permite criar variáveis de forma simples.','idade = 15','Qual é o valor de idade?',[['a','15'],['b','"idade"'],['c','0']], 'a','idade recebe o número 15.'],
+  ['if','if executa um bloco quando uma condição é verdadeira.','if idade >= 18:\n    print("adulto")','Qual palavra começa a condição?',[['a','if'],['b','then'],['c','when']], 'a','Python usa if para decisões.'],
+  ['Listas','Listas guardam vários valores em ordem.','nomes = ["Ana", "Bia"]','Qual estrutura representa uma lista?',[['a','[]'],['b','{}'],['c','()']], 'a','Colchetes [] criam listas.'],
+  ['Funções','def cria funções.','def soma(a,b):\n    return a+b','Qual palavra cria a função?',[['a','def'],['b','function'],['c','fn']], 'a','def define uma função em Python.'] ]},
+ cpp:{name:'C++',icon:'⚙️',desc:'Performance e lógica',topics:[
+  ['main','O programa geralmente começa pela função main.','int main() { return 0; }','Qual função é o ponto de entrada comum?',[['a','main'],['b','start'],['c','run']], 'a','main é o ponto de entrada tradicional.'],
+  ['Variáveis','Tipos indicam o tipo de dado armazenado.','int idade = 15;','int representa:',[['a','inteiro'],['b','texto'],['c','imagem']], 'a','int é um tipo inteiro.'],
+  ['if','if executa código quando uma condição é verdadeira.','if (x > 0) { }','Qual palavra inicia a decisão?',[['a','if'],['b','when'],['c','check']], 'a','if faz um teste lógico.'],
+  ['for','for repete um bloco de código.','for(int i=0;i<5;i++) {}','Para que serve o for?',[['a','repetição'],['b','estilo'],['c','imagem']], 'a','for cria um laço.'],
+  ['vector','std::vector guarda uma sequência dinâmica.','std::vector<int> v;','vector serve para:',[['a','armazenar vários valores'],['b','mudar CSS'],['c','criar HTML']], 'a','vector é uma coleção dinâmica.'] ]},
+ java:{name:'Java',icon:'☕',desc:'Orientação a objetos',topics:[
+  ['class','Classes definem estruturas e comportamentos.','class Pessoa {}','Qual palavra cria uma classe?',[['a','class'],['b','type'],['c','object']], 'a','class define uma classe.'],
+  ['main','O método main é um ponto de entrada comum em aplicações Java.','public static void main(String[] args) {}','Qual método costuma iniciar o programa?',[['a','main'],['b','start'],['c','run']], 'a','main é o método de entrada tradicional.'],
+  ['String','String representa texto.','String nome = "Luiz";','Qual tipo guarda texto?',[['a','String'],['b','Text'],['c','char[] only']], 'a','String é usado para textos.'],
+  ['if','if testa uma condição.','if (idade >= 18) {}','Para decisão usamos:',[['a','if'],['b','when'],['c','check']], 'a','if testa expressões booleanas.'],
+  ['ArrayList','ArrayList é uma lista redimensionável.','ArrayList<String> nomes = new ArrayList<>();','ArrayList serve para:',[['a','uma lista dinâmica'],['b','CSS'],['c','imagens']], 'a','ArrayList guarda uma lista dinâmica.'] ]},
+ sql:{name:'SQL',icon:'🗄️',desc:'Banco de dados',topics:[
+  ['SELECT','SELECT consulta dados de uma tabela.','SELECT * FROM alunos;','Qual comando consulta dados?',[['a','SELECT'],['b','GET'],['c','READ']], 'a','SELECT busca registros.'],
+  ['WHERE','WHERE filtra resultados.','SELECT * FROM alunos WHERE idade >= 18;','O WHERE serve para:',[['a','filtrar'],['b','criar CSS'],['c','apagar tudo']], 'a','WHERE limita os resultados à condição.'],
+  ['INSERT','INSERT adiciona registros.','INSERT INTO alunos (nome) VALUES (\'Ana\');','Qual comando adiciona dados?',[['a','INSERT'],['b','ADDROW'],['c','PUSH']], 'a','INSERT adiciona uma linha.'],
+  ['UPDATE','UPDATE altera registros existentes.','UPDATE alunos SET idade=16 WHERE nome=\'Ana\';','Qual comando altera dados?',[['a','UPDATE'],['b','CHANGE'],['c','EDIT']], 'a','UPDATE modifica registros.'],
+  ['DELETE','DELETE remove registros.','DELETE FROM alunos WHERE id=3;','Qual comando remove registros?',[['a','DELETE'],['b','REMOVE'],['c','DROPROW']], 'a','DELETE remove linhas; DROP é usado para objetos como tabelas.'] ]}
 };
 
-const LANGUAGES = {
-  html: {
-    name: 'HTML', icon: '🌐', colorName: 'Estrutura da Web',
-    topics: [
-      ['Estrutura básica', '<!DOCTYPE html>, html, head e body'], ['Títulos', 'h1 até h6'], ['Parágrafos', 'p, br e hr'], ['Links', 'a e atributos'], ['Imagens', 'img, src e alt'], ['Listas', 'ul, ol e li'], ['Tabelas', 'table, tr, th e td'], ['Formulários', 'form, input, label e button'], ['Semântica', 'header, nav, main, section, article e footer'], ['Áudio e vídeo', 'audio e video'], ['Acessibilidade', 'alt, label, aria e estrutura semântica'], ['Meta tags', 'charset, viewport e description'], ['Classes e IDs', 'class e id'], ['Data attributes', 'data-*'], ['Entidades HTML', 'símbolos especiais e entidades'], ['Iframe', 'incorporar conteúdo'], ['SVG e canvas', 'gráficos na página'], ['SEO básico', 'estrutura e informações para buscadores']
-    ]
-  },
-  css: {
-    name: 'CSS', icon: '🎨', colorName: 'Estilo da Web',
-    topics: [
-      ['Sintaxe CSS', 'seletor, propriedade e valor'], ['Seletores', 'tag, classe, id e combinadores'], ['Cores', 'hex, rgb, hsl e transparência'], ['Unidades', 'px, %, rem, em, vh e vw'], ['Box model', 'margin, border, padding e content'], ['Display', 'block, inline e inline-block'], ['Flexbox', 'container e itens flex'], ['Grid', 'linhas, colunas e áreas'], ['Position', 'static, relative, absolute, fixed e sticky'], ['Pseudo-classes', ':hover, :focus, :active e :nth-child'], ['Pseudo-elementos', '::before e ::after'], ['Tipografia', 'font-size, weight, family e line-height'], ['Backgrounds', 'imagem, tamanho, posição e repetição'], ['Bordas e sombras', 'border, radius e box-shadow'], ['Transições', 'transition'], ['Animações', '@keyframes e animation'], ['Responsividade', 'media queries'], ['Variáveis CSS', '--variavel e var()'], ['Z-index', 'camadas'], ['Overflow', 'hidden, auto e scroll']
-    ]
-  },
-  js: {
-    name: 'JavaScript', icon: '⚡', colorName: 'Comportamento da Web',
-    topics: [
-      ['Variáveis', 'let, const e var'], ['Tipos de dados', 'string, number, boolean, null e undefined'], ['Operadores', 'aritméticos, comparação e lógicos'], ['Entrada e saída', 'prompt, alert e console'], ['If / Else', 'decisões condicionais'], ['Switch', 'múltiplos casos'], ['Operador ternário', 'condição em uma expressão'], ['Loops', 'for, while e do while'], ['Funções', 'function e return'], ['Arrow functions', 'sintaxe =>'], ['Escopo', 'global, local e bloco'], ['Arrays', 'listas de valores'], ['Métodos de array', 'map, filter, find, reduce e forEach'], ['Objetos', 'chave e valor'], ['Desestruturação', 'destructuring'], ['Spread e rest', '... em arrays e funções'], ['DOM', 'selecionar e alterar elementos'], ['Eventos', 'click, input, submit e outros'], ['Formulários', 'capturar e validar dados'], ['localStorage', 'salvar dados no navegador'], ['JSON', 'JSON.parse e JSON.stringify'], ['Fetch', 'requisições HTTP'], ['Async / Await', 'código assíncrono'], ['Promises', 'then, catch e finally'], ['Módulos', 'import e export'], ['Classes', 'class, constructor e methods'], ['try / catch', 'tratamento de erros'], ['Set e Map', 'coleções especiais'], ['Timers', 'setTimeout e setInterval']
-    ]
-  },
-  python: {
-    name: 'Python', icon: '🐍', colorName: 'Lógica e Automação',
-    topics: [
-      ['Sintaxe básica', 'indentação e comandos'], ['Variáveis', 'nomes e atribuição'], ['Tipos', 'str, int, float e bool'], ['Input', 'entrada de dados'], ['Print', 'saída de dados'], ['Operadores', 'aritméticos, comparação e lógicos'], ['If / Elif / Else', 'decisões'], ['Loops for', 'repetição controlada'], ['Loop while', 'repetição condicional'], ['Range', 'sequências numéricas'], ['Funções', 'def e return'], ['Parâmetros', 'dados recebidos por funções'], ['Listas', 'coleções mutáveis'], ['Tuplas', 'coleções imutáveis'], ['Dicionários', 'chave e valor'], ['Sets', 'conjuntos'], ['List comprehensions', 'criação compacta de listas'], ['Strings', 'texto e métodos'], ['Exceções', 'try, except e finally'], ['Módulos', 'import'], ['Arquivos', 'open, read e write'], ['POO', 'classes e objetos'], ['Herança', 'reutilização de classes'], ['Lambdas', 'funções pequenas'], ['Map / Filter', 'processamento de coleções'], ['Decorators', 'funções que envolvem funções'], ['Generators', 'yield'], ['Virtualenv', 'ambientes isolados'], ['pip', 'gerenciador de pacotes'], ['Type hints', 'anotações de tipos']
-    ]
-  },
-  cpp: {
-    name: 'C++', icon: '⚙️', colorName: 'Programação de sistemas',
-    topics: [
-      ['Estrutura básica', '#include e main'], ['cout e cin', 'saída e entrada'], ['Variáveis', 'declaração e atribuição'], ['Tipos', 'int, double, char e bool'], ['Constantes', 'const'], ['Operadores', 'aritméticos e lógicos'], ['If / Else', 'condições'], ['Switch', 'múltiplos casos'], ['Loops', 'for, while e do while'], ['Funções', 'declaração e retorno'], ['Parâmetros', 'passagem de valores'], ['Arrays', 'vetores'], ['Strings', 'std::string'], ['Pointers', 'endereços de memória'], ['References', 'referências'], ['Structs', 'estruturas personalizadas'], ['Classes', 'programação orientada a objetos'], ['Constructors', 'inicialização de objetos'], ['Herança', 'classes derivadas'], ['Polimorfismo', 'sobrescrita e virtual'], ['Encapsulamento', 'private, public e protected'], ['Templates', 'código genérico'], ['STL', 'biblioteca padrão'], ['vector', 'vetor dinâmico'], ['map', 'estrutura chave-valor'], ['set', 'conjunto ordenado'], ['Exceptions', 'try, catch e throw'], ['Arquivos', 'fstream'], ['Namespaces', 'organização de nomes'], ['Memória dinâmica', 'new e delete']
-    ]
-  },
-  java: {
-    name: 'Java', icon: '☕', colorName: 'Orientação a Objetos',
-    topics: [
-      ['Estrutura básica', 'class e main'], ['Variáveis', 'declaração'], ['Tipos primitivos', 'int, double, char e boolean'], ['Strings', 'String'], ['Operadores', 'aritméticos e lógicos'], ['If / Else', 'condicionais'], ['Switch', 'múltiplos casos'], ['Loops', 'for, while e do while'], ['Métodos', 'funções em classes'], ['Arrays', 'coleções fixas'], ['ArrayList', 'listas dinâmicas'], ['Classes', 'modelos de objetos'], ['Objetos', 'instâncias'], ['Constructors', 'inicialização'], ['Herança', 'extends'], ['Interfaces', 'contratos'], ['Polimorfismo', 'sobrescrita'], ['Encapsulamento', 'modificadores'], ['Exceptions', 'try/catch'], ['Packages', 'organização'], ['Generics', 'tipos genéricos']
-    ]
-  },
-  sql: {
-    name: 'SQL', icon: '🗄️', colorName: 'Banco de dados',
-    topics: [
-      ['SELECT', 'consultar dados'], ['WHERE', 'filtrar registros'], ['ORDER BY', 'ordenar resultados'], ['INSERT', 'inserir dados'], ['UPDATE', 'atualizar dados'], ['DELETE', 'remover dados'], ['CREATE TABLE', 'criar tabelas'], ['ALTER TABLE', 'alterar estrutura'], ['DROP TABLE', 'remover tabelas'], ['PRIMARY KEY', 'identificador único'], ['FOREIGN KEY', 'relacionamento entre tabelas'], ['JOIN', 'combinar tabelas'], ['INNER JOIN', 'combinação interna'], ['LEFT JOIN', 'manter registros da esquerda'], ['GROUP BY', 'agrupar resultados'], ['HAVING', 'filtrar grupos'], ['COUNT', 'contar registros'], ['SUM', 'somar valores'], ['AVG', 'média'], ['MIN / MAX', 'menor e maior valor'], ['NULL', 'ausência de valor'], ['LIKE', 'busca por padrão'], ['IN', 'comparar com lista'], ['BETWEEN', 'faixa de valores'], ['Subqueries', 'consulta dentro de consulta'], ['Índices', 'melhorar buscas'], ['Normalização', 'organizar dados'], ['Transações', 'COMMIT e ROLLBACK']
-    ]
-  }
-};
+const profileModes={child:{name:'🌱 Bem simples',prompt:'Explicação bem simples: imagine que programação é ensinar um computador a seguir uma receita. Primeiro entenda a ideia e só depois decore a sintaxe.'},normal:{name:'📘 Normal',prompt:'Explicação objetiva e técnica, mas sem assumir conhecimento prévio.'},deep:{name:'🧠 Mais detalhado',prompt:'Explicação com detalhes, contexto e comparações de conceitos.'}};
 
-const LEVELS = {
-  1: { name: 'Nível 1 — Fundamentos', desc: 'Comece pelos conceitos mais importantes.', xp: 20, unlock: 0, count: 10 },
-  2: { name: 'Nível 2 — Intermediário', desc: 'Aprofunde seus conhecimentos e pratique mais.', xp: 35, unlock: 25, count: 20 },
-  3: { name: 'Nível 3 — Avançado', desc: 'Desafios maiores para testar seu domínio.', xp: 60, unlock: 55, count: 50 }
-};
+let state={user:null,mode:'child',xp:0,completed:{},channel:'geral',theme:'dark',demo:false};
+let messages=[];let realtimeChannel=null;
 
-let state = loadState();
-let currentView = 'dashboard';
-let currentLanguage = 'html';
-let currentTopicIndex = 0;
-let currentLesson = null;
-let selectedQuizAnswer = null;
-let quizQuestions = [];
-let quizIndex = 0;
-let quizScore = 0;
-
-function defaultState() {
-  return {
-    currentProfile: null,
-    theme: 'dark',
-    profiles: Object.fromEntries(Object.keys(PROFILES).map(id => [id, {
-      xp: 0,
-      lessons: {},
-      exercises: {},
-      quiz: {},
-      achievements: [],
-      completedLevels: {}
-    }]))
-  };
+const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200)}
+function key(){return `codestudy:${state.user?.id||'demo'}`}
+function saveLocal(){localStorage.setItem(key(),JSON.stringify({xp:state.xp,completed:state.completed,mode:state.mode,profileName:state.user?.name||'Aluno'}));}
+function loadLocal(){const d=JSON.parse(localStorage.getItem(key())||'{}');state.xp=d.xp||0;state.completed=d.completed||{};state.mode=d.mode||'child'}
+function avatarText(n){return (n||'A').trim().slice(0,1).toUpperCase()}
+function totalLessons(){return Object.values(languages).reduce((s,l)=>s+l.topics.length,0)}
+function doneCount(){return Object.values(state.completed).filter(Boolean).length}
+function overallPct(){return Math.round(doneCount()/totalLessons()*100)}
+function levelInfo(){const level=Math.floor(state.xp/100)+1;const current=state.xp%100;return {level,current,pct:current,need:100-current}}
+function renderHeader(title,eyebrow='COMECE POR AQUI'){$('#pageTitle').textContent=title;$('#pageEyebrow').textContent=eyebrow}
+function showPage(name){$$('.page').forEach(p=>p.classList.add('hidden'));$(`#page-${name}`).classList.remove('hidden');$$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===name));const titles={home:['Olá!','COMECE POR AQUI'],study:['Biblioteca de estudo','APRENDA'],chat:['Comunidade','CONVERSE'],progress:['Meu progresso','ACOMPANHE'],profile:['Perfil','SUA CONTA'],lesson:['Aula','ESTUDE']};renderHeader(...(titles[name]||['CodeStudy','']));if(name==='home')renderHome();if(name==='study')renderStudy();if(name==='progress')renderProgress();}
+function showLesson(lang,idx){const item=languages[lang].topics[idx];const [title,explain,code,question,opts,correct,answer]=item;const completed=!!state.completed[`${lang}:${idx}`];const mode=profileModes[state.mode];showPage('lesson');$('#lessonView').innerHTML=`<div class="lesson-view-card glass"><span class="pill purple">${languages[lang].icon} ${languages[lang].name}</span><h2>${idx+1}. ${title}</h2><p class="explain"><strong>${mode.name}:</strong> ${easyExplain(explain,title)}</p><div class="concept-box"><div class="concept"><h4>🧠 Entenda antes</h4><p>${mode.prompt}</p></div><div class="concept"><h4>✅ O que lembrar</h4><p>${answer}</p></div></div><pre class="code"><code>${escapeHTML(code)}</code></pre><div class="exercise"><h3>🧩 Agora tente</h3><p>${question}</p><div class="answer-area"><div class="lesson-actions">${opts.map(([id,t])=>`<button class="secondary option-btn" data-opt="${id}">${id.toUpperCase()}) ${t}</button>`).join('')}</div><div id="quizFeedback" class="tiny" style="margin-top:10px"></div></div><div class="exercise-actions"><button id="showAnswer" class="ghost">👀 Mostrar resposta</button><button id="completeLesson" class="primary">${completed?'✅ Concluída':'Concluir aula +20 XP'}</button></div></div></div>`;
+let selected=null;$$('.option-btn').forEach(btn=>btn.onclick=()=>{selected=btn.dataset.opt;$$('.option-btn').forEach(b=>b.style.borderColor='');btn.style.borderColor='var(--accent)';if(selected===correct){$('#quizFeedback').textContent='✅ Acertou! Você entendeu o conceito.';$('#quizFeedback').style.color='var(--good)'}else{$('#quizFeedback').textContent='❌ Ainda não. Leia a explicação e tente novamente.';$('#quizFeedback').style.color='var(--bad)'}});
+$('#showAnswer').onclick=()=>openDialog('answerDialog',`<h3>👀 Resposta</h3><p>${answer}</p><p><strong>Alternativa correta:</strong> ${correct.toUpperCase()}</p>`);
+$('#completeLesson').onclick=()=>{if(!state.completed[`${lang}:${idx}`]){state.completed[`${lang}:${idx}`]=true;state.xp+=20;saveLocal();toast('+20 XP! Aula concluída.')}else toast('Você já concluiu esta aula.');updateAll()};
 }
-
-function loadState() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (!parsed) return defaultState();
-    const base = defaultState();
-    return {
-      ...base,
-      ...parsed,
-      profiles: Object.fromEntries(Object.keys(PROFILES).map(id => [id, { ...base.profiles[id], ...(parsed.profiles?.[id] || {}) }]))
-    };
-  } catch { return defaultState(); }
+function easyExplain(text,title){if(state.mode==='child'){return `Pensa em <strong>${title}</strong> como uma ferramenta da sua caixa de programação. ${text} Agora compare com o exemplo abaixo e tente prever o resultado.`}if(state.mode==='deep'){return `${text} O mais importante é entender quando usar esse conceito e como ele se conecta aos anteriores. Leia o exemplo, teste pequenas mudanças e observe o que acontece.`}return text}
+function escapeHTML(s){return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
+function renderHome(){const g=$('#homeLanguages');g.innerHTML='';Object.entries(languages).forEach(([id,l])=>{const done=Object.keys(state.completed).filter(k=>k.startsWith(id+':')).length;const pct=Math.round(done/l.topics.length*100);const card=document.createElement('div');card.className='lang-card';card.innerHTML=`<div class="lang-icon">${l.icon}</div><div class="lang-name">${l.name}</div><div class="lang-desc">${l.desc}</div><div class="progress-row"><span>${done}/${l.topics.length}</span><strong>${pct}%</strong></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>`;card.onclick=()=>{showPage('study');$('#languageSelect').value=id;renderStudy()};g.appendChild(card)});}
+function renderStudy(){const sel=$('#languageSelect');if(!sel.options.length)sel.innerHTML=Object.entries(languages).map(([id,l])=>`<option value="${id}">${l.icon} ${l.name}</option>`).join('');const lang=sel.value||'html';$('#lessonList').innerHTML=languages[lang].topics.map(([title,explain,, ,,,],i)=>{const d=state.completed[`${lang}:${i}`];return `<article class="lesson-card ${d?'done':''}"><div class="lesson-head"><div class="lesson-num">${i+1}</div><div class="lesson-info"><h3>${title} ${d?'✅':''}</h3><p>${easyExplain(explain,title)}</p></div></div><div class="lesson-actions"><button class="primary open-lesson" data-lang="${lang}" data-idx="${i}">📖 Abrir aula</button><button class="secondary quick-answer" data-lang="${lang}" data-idx="${i}">👀 Ver resposta</button></div></article>`}).join('');$$('.open-lesson').forEach(b=>b.onclick=()=>showLesson(b.dataset.lang,+b.dataset.idx));$$('.quick-answer').forEach(b=>{b.onclick=()=>{const x=languages[b.dataset.lang].topics[+b.dataset.idx];openDialog('answerDialog',`<h3>👀 Resposta — ${x[0]}</h3><p>${x[6]}</p><p><strong>Correta:</strong> ${x[5].toUpperCase()}</p>`)}})}
+function renderProgress(){const pg=$('#progressGrid');pg.innerHTML=Object.entries(languages).map(([id,l])=>{const done=Object.keys(state.completed).filter(k=>k.startsWith(id+':')).length;const pct=Math.round(done/l.topics.length*100);return `<div class="prog-card"><h3>${l.icon} ${l.name}</h3><div class="prog-top"><span>${done}/${l.topics.length} aulas</span><strong>${pct}%</strong></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div></div>`}).join('');const ach=[['🌱','Primeiro passo',doneCount()>=1],['⭐','100 XP',state.xp>=100],['📚','5 aulas',doneCount()>=5],['🔥','10 aulas',doneCount()>=10],['💬','Primeira mensagem',+localStorage.getItem(`codestudy:msg:${state.user?.id||'demo'}`)||0>=1]];$('#achievements').innerHTML=ach.map(a=>`<div class="achievement ${a[2]?'unlocked':''}"><div style="font-size:24px">${a[0]}</div><strong>${a[1]}</strong><div class="tiny">${a[2]?'Desbloqueada':'Ainda bloqueada'}</div></div>`).join('')}
+function updateAll(){const li=levelInfo();$('#xpTop').textContent=state.xp;$('#levelLabel').textContent=`Nível ${li.level}`;$('#levelPct').textContent=`${li.pct}%`;$('.level-ring').style.setProperty('--pct',li.pct);$('#nextLevelXP').textContent=`${li.need} XP`;$('#overallPct').textContent=`${overallPct()}%`;$('#overallBar').style.width=`${overallPct()}%`;$('#lessonsDone').textContent=doneCount();$('#exercisesDone').textContent=doneCount();$('#profileName').textContent=state.user?.name||'Aluno';$('#profileRole').textContent=state.demo?'Modo demo':'Estudante';$('#avatar').textContent=avatarText(state.user?.name);$('#profileAvatarBig').textContent=avatarText(state.user?.name);$('#profileBigName').textContent=state.user?.name||'Aluno';$('#profileBigEmail').textContent=state.user?.email||'modo demo';$('#displayNameInput').value=state.user?.name||'Aluno';$('#explainMode').value=state.mode;renderHome();renderProgress();}
+async function boot(){
+  setupEvents();
+  if(hasSupabase){$('#backendStatus').textContent='✅ Banco conectado. Você pode criar sua conta.';$('#connectionState').textContent='online';$('#connectionState').classList.remove('offline');const {data}=await sb.auth.getSession();if(data.session) await loginSupabase(data.session)}else{$('#backendStatus').textContent='🟡 Modo demo: configure o Supabase em config.js para ter login e chat online.'}
 }
-
-function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-function profileData() { return state.profiles[state.currentProfile]; }
-function currentProfile() { return PROFILES[state.currentProfile]; }
-function esc(text) { return String(text).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function toast(message) {
-  const el = document.getElementById('toast');
-  el.textContent = message;
-  el.classList.add('show');
-  clearTimeout(toast.t);
-  toast.t = setTimeout(() => el.classList.remove('show'), 2200);
+async function loginSupabase(session){state.demo=false;state.user={id:session.user.id,email:session.user.email,name:session.user.user_metadata?.username||session.user.email?.split('@')[0]||'Aluno'};const {data}=await sb.from('profiles').select('*').eq('id',state.user.id).maybeSingle();if(data){state.user.name=data.username||state.user.name;state.mode=data.explain_mode||'child';state.xp=data.xp||0} else {await sb.from('profiles').insert({id:state.user.id,username:state.user.name});loadLocal()}state.active=true;document.querySelector('#authScreen').classList.add('hidden');document.querySelector('#appScreen').classList.remove('hidden');updateAll();showPage('home');await setupRealtime()}
+function loginDemo(){state.demo=true;state.user={id:'demo-user',email:'demo@codestudy.local',name:'Aluno Demo'};loadLocal();document.querySelector('#authScreen').classList.add('hidden');document.querySelector('#appScreen').classList.remove('hidden');updateAll();showPage('home');loadMessagesDemo();$('#connectionState').textContent='modo demo';$('#connectionState').classList.add('offline');}
+async function setupRealtime(){if(!hasSupabase)return;await loadMessagesOnline();if(realtimeChannel)sb.removeChannel(realtimeChannel);realtimeChannel=sb.channel('chat-messages').on('postgres_changes',{event:'INSERT',schema:'public',table:'messages'},async payload=>{if(payload.new.channel!==state.channel)return;const m=await hydrateMessage(payload.new);renderMessages([...messages,m]);}).subscribe();}
+async function hydrateMessage(row){let name='Aluno';if(hasSupabase){const {data}=await sb.from('profiles').select('username').eq('id',row.user_id).maybeSingle();name=data?.username||name}return {id:row.id,userId:row.user_id,name,content:row.content,created_at:row.created_at}}
+async function loadMessagesOnline(){if(!hasSupabase)return;const {data}=await sb.from('messages').select('*').eq('channel',state.channel).order('created_at',{ascending:true}).limit(100);messages=[];for(const row of data||[])messages.push(await hydrateMessage(row));renderMessages(messages)}
+function loadMessagesDemo(){messages=JSON.parse(localStorage.getItem(`codestudy:chat:${state.channel}`)||'[]');if(!messages.length)messages=[{id:'welcome',userId:'system',name:'CodeStudy',content:'Bem-vindo ao chat! Aqui você pode conversar e tirar dúvidas. 💜',created_at:new Date().toISOString()}];renderMessages(messages)}
+function renderMessages(list){const box=$('#messages');box.innerHTML='';list.forEach(m=>{const mine=m.userId===state.user?.id;const el=document.createElement('div');el.className=`message ${mine?'mine':''}`;el.innerHTML=`${mine?'':`<div class="avatar">${avatarText(m.name)}</div>`}<div class="message-bubble"><div class="message-meta"><strong>${escapeHTML(m.name)}</strong> · ${new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div><div class="message-text">${escapeHTML(m.content)}</div></div>`;box.appendChild(el)});box.scrollTop=box.scrollHeight;$('#messagesCount').textContent=list.length}
+async function sendMessage(content){const clean=content.trim();if(!clean)return;if(hasSupabase&&!state.demo){const {error}=await sb.from('messages').insert({user_id:state.user.id,channel:state.channel,content:clean});if(error){toast('Não foi possível enviar.');return}}else{const list=JSON.parse(localStorage.getItem(`codestudy:chat:${state.channel}`)||'[]');list.push({id:crypto.randomUUID?.()||Date.now(),userId:state.user.id,name:state.user.name,content:clean,created_at:new Date().toISOString()});localStorage.setItem(`codestudy:chat:${state.channel}`,JSON.stringify(list));loadMessagesDemo()}localStorage.setItem(`codestudy:msg:${state.user?.id||'demo'}`,'1')}
+function openDialog(id,html){if(id==='answerDialog')$('#answerContent').innerHTML=html;else $('#feedbackContent').innerHTML=html;document.getElementById(id).showModal()}
+function setupEvents(){
+  $$('.auth-tab').forEach(b=>b.onclick=()=>{$$('.auth-tab').forEach(x=>x.classList.toggle('active',x===b));$('#loginForm').classList.toggle('hidden',b.dataset.authTab!=='login');$('#signupForm').classList.toggle('hidden',b.dataset.authTab!=='signup')});
+  $('#demoLogin').onclick=loginDemo;
+  $('#loginForm').onsubmit=async e=>{e.preventDefault();if(!hasSupabase){toast('Use o modo demo ou configure o Supabase.');return}const {data,error}=await sb.auth.signInWithPassword({email:$('#loginEmail').value.trim(),password:$('#loginPassword').value});if(error)toast(error.message);else await loginSupabase(data.session)};
+  $('#signupForm').onsubmit=async e=>{e.preventDefault();if(!hasSupabase){toast('Configure o Supabase primeiro.');return}const name=$('#signupName').value.trim();const {data,error}=await sb.auth.signUp({email:$('#signupEmail').value.trim(),password:$('#signupPassword').value,options:{data:{username:name}}});if(error)toast(error.message);else{toast(data.session?'Conta criada!':'Conta criada. Confira seu e-mail.');if(data.session)await loginSupabase(data.session)}};
+  $$('.nav-btn').forEach(b=>b.onclick=()=>showPage(b.dataset.page));$$('[data-page-jump]').forEach(b=>b.onclick=()=>showPage(b.dataset.pageJump));
+  $('#languageSelect').onchange=renderStudy;
+  $('#themeBtn').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('codestudy:theme',document.body.classList.contains('light')?'light':'dark')};
+  if(localStorage.getItem('codestudy:theme')==='light')document.body.classList.add('light');
+  $('#mobileMenu').onclick=()=>$('.sidebar').classList.toggle('open');
+  $$('.channel').forEach(b=>b.onclick=async()=>{ $$('.channel').forEach(x=>x.classList.toggle('active',x===b));state.channel=b.dataset.channel;$('#channelTitle').textContent='# '+state.channel;if(hasSupabase&&!state.demo)await loadMessagesOnline();else loadMessagesDemo()});
+  $('#messageForm').onsubmit=async e=>{e.preventDefault();const ta=$('#messageInput');await sendMessage(ta.value);ta.value='';ta.focus()};$('#messageInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#messageForm').requestSubmit()}});
+  $$('[data-close-dialog]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.closeDialog).close());
+  $('#logoutBtn').onclick=async()=>{if(hasSupabase&&!state.demo)await sb.auth.signOut();location.reload()};
+  $('#saveProfileBtn').onclick=async()=>{const n=$('#displayNameInput').value.trim()||'Aluno';state.user.name=n;state.mode=$('#explainMode').value;saveLocal();if(hasSupabase&&!state.demo){await sb.from('profiles').upsert({id:state.user.id,username:n,explain_mode:state.mode,xp:state.xp,updated_at:new Date().toISOString()})}updateAll();toast('Perfil salvo!')};
 }
-function pct(done, total) { return total ? Math.round((done / total) * 100) : 0; }
-function normalize(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' '); }
-function slug(s) { return normalize(s).replace(/[^a-z0-9]+/g,'-'); }
-function activeLessons() { return profileData()?.lessons || {}; }
-
-function getLanguageStats(langKey) {
-  const topics = LANGUAGES[langKey].topics;
-  const done = topics.filter((_, i) => activeLessons()[`${langKey}:${i}`]).length;
-  return { done, total: topics.length, percent: pct(done, topics.length) };
-}
-
-function totalProgress() {
-  const all = Object.keys(LANGUAGES).reduce((acc, key) => acc + LANGUAGES[key].topics.length, 0);
-  const done = Object.keys(LANGUAGES).reduce((acc, key) => acc + getLanguageStats(key).done, 0);
-  return { done, total: all, percent: pct(done, all) };
-}
-
-function renderProfiles() {
-  const root = document.getElementById('profileOptions');
-  root.innerHTML = Object.entries(PROFILES).map(([id, p]) => {
-    const d = state.profiles[id];
-    const prog = Object.keys(LANGUAGES).reduce((sum, k) => sum + LANGUAGES[k].topics.filter((_,i)=>d.lessons?.[`${k}:${i}`]).length, 0);
-    return `<button class="profile-option" data-profile="${id}">
-      <div class="avatar">${p.avatar}</div>
-      <h3>${p.name}</h3>
-      <p>${p.tag}</p>
-      <div class="profile-stats"><span>⭐ ${d.xp} XP</span><span>📚 ${prog} aulas</span></div>
-    </button>`;
-  }).join('');
-  root.querySelectorAll('[data-profile]').forEach(btn => btn.addEventListener('click', () => selectProfile(btn.dataset.profile)));
-
-  const last = state.currentProfile;
-  const cont = document.getElementById('continueLastProfile');
-  if (last && PROFILES[last]) {
-    cont.classList.remove('hidden');
-    document.getElementById('lastProfileName').textContent = PROFILES[last].name;
-    cont.onclick = () => selectProfile(last);
-  } else cont.classList.add('hidden');
-}
-
-function selectProfile(id) {
-  if (!PROFILES[id]) return;
-  state.currentProfile = id;
-  saveState();
-  document.getElementById('profileScreen').classList.remove('active');
-  document.getElementById('profileScreen').classList.add('hidden');
-  document.getElementById('mainShell').classList.remove('hidden');
-  document.body.classList.toggle('light', state.theme === 'light');
-  updateHeader();
-  renderCurrentView();
-  toast(`Perfil ${PROFILES[id].name} carregado!`);
-}
-
-function updateHeader() {
-  const p = currentProfile();
-  const d = profileData();
-  document.getElementById('topProfileName').textContent = p.name;
-  document.getElementById('topProfileTag').textContent = p.tag;
-  document.getElementById('headerXP').textContent = d.xp;
-  document.getElementById('currentProfileCard').innerHTML = `<div class="mini-avatar">${p.avatar}</div><div><strong>${p.name}</strong><small>${d.xp} XP</small></div>`;
-}
-
-function switchView(view) {
-  currentView = view;
-  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-  const target = document.getElementById(`${view}View`);
-  if (target) target.classList.add('active');
-  document.querySelectorAll('.nav-btn[data-view]').forEach(btn => btn.classList.toggle('active', btn.dataset.view === view));
-  renderCurrentView();
-  closeSidebar();
-}
-function renderCurrentView() {
-  updateHeader();
-  if (currentView === 'dashboard') renderDashboard();
-  if (currentView === 'study') renderStudy();
-  if (currentView === 'lessons') renderLessons();
-  if (currentView === 'exercises') renderExercises();
-  if (currentView === 'quiz') renderQuizHome();
-  if (currentView === 'progress') renderProgress();
-}
-
-function renderDashboard() {
-  const t = totalProgress();
-  const p = currentProfile();
-  const langs = Object.entries(LANGUAGES);
-  document.getElementById('dashboardView').innerHTML = `
-    <div class="hero-banner">
-      <span class="eyebrow">📚 Central de Programação</span>
-      <h2>Oi, ${esc(p.name)} 👋</h2>
-      <p>${esc(p.style)} Estude HTML, CSS, JavaScript, Python, C++, Java e SQL com aulas, exemplos, exercícios e quiz.</p>
-    </div>
-    <div class="grid grid-4" style="margin-bottom:18px">
-      <div class="card stat"><div><span>Progresso geral</span><strong>${t.percent}%</strong></div><div>📈</div></div>
-      <div class="card stat"><div><span>Aulas concluídas</span><strong>${t.done}</strong></div><div>✅</div></div>
-      <div class="card stat"><div><span>XP</span><strong>${profileData().xp}</strong></div><div>⭐</div></div>
-      <div class="card stat"><div><span>Conquistas</span><strong>${profileData().achievements.length}</strong></div><div>🏆</div></div>
-    </div>
-    <div class="card" style="margin-bottom:18px">
-      <div class="stat"><div><strong>Seu progresso</strong><span>Continue de onde parou.</span></div><strong>${t.percent}%</strong></div>
-      <div class="progress-bar" style="margin-top:14px"><div class="progress-fill" style="width:${t.percent}%"></div></div>
-    </div>
-    <div class="page-title"><div><h1>Linguagens</h1><p>Escolha uma linguagem para estudar.</p></div><button class="btn btn-primary" id="goStudy">📖 Abrir estudo</button></div>
-    <div class="grid grid-4">${langs.map(([key, l]) => {
-      const s = getLanguageStats(key);
-      return `<div class="card lang-card" data-lang="${key}">
-        <div class="lang-icon">${l.icon}</div>
-        <div class="lang-title"><h3>${l.name}</h3><span class="percent">${s.percent}%</span></div>
-        <p style="margin:8px 0 12px">${l.colorName}</p>
-        <div class="progress-bar"><div class="progress-fill" style="width:${s.percent}%"></div></div>
-        <div class="small-label" style="margin-top:9px">${s.done}/${s.total} conceitos estudados</div>
-      </div>`;
-    }).join('')}</div>
-  `;
-  document.querySelectorAll('[data-lang]').forEach(el => el.addEventListener('click', () => openLanguage(el.dataset.lang)));
-  document.getElementById('goStudy').onclick = () => switchView('study');
-}
-
-function openLanguage(langKey) {
-  currentLanguage = langKey;
-  switchView('lessons');
-}
-
-function renderStudy() {
-  document.getElementById('studyView').innerHTML = `
-    <div class="page-title"><div><h1>📖 Estudo</h1><p>Escolha uma linguagem e veja todos os conceitos.</p></div><button class="btn btn-secondary" id="studyRandom">🎲 Conceito aleatório</button></div>
-    <div class="grid grid-4">${Object.entries(LANGUAGES).map(([key,l]) => {
-      const s = getLanguageStats(key);
-      return `<div class="card lang-card" data-study-lang="${key}"><div class="lang-icon">${l.icon}</div><h3>${l.name}</h3><p>${l.colorName}</p><div class="progress-bar" style="margin-top:16px"><div class="progress-fill" style="width:${s.percent}%"></div></div><div class="small-label" style="margin-top:8px">${s.done}/${s.total} estudados</div></div>`;
-    }).join('')}</div>
-    <div class="card" style="margin-top:18px">
-      <h3>Como estudar</h3>
-      <p>1. Abra uma linguagem. 2. Leia o conceito. 3. Veja o exemplo. 4. Faça o exercício. 5. Marque a aula como concluída para ganhar XP.</p>
-    </div>
-  `;
-  document.querySelectorAll('[data-study-lang]').forEach(el => el.onclick = () => openLanguage(el.dataset.studyLang));
-  document.getElementById('studyRandom').onclick = () => {
-    const keys = Object.keys(LANGUAGES);
-    const k = keys[Math.floor(Math.random()*keys.length)];
-    currentLanguage = k;
-    currentTopicIndex = Math.floor(Math.random()*LANGUAGES[k].topics.length);
-    openTopic(k, currentTopicIndex);
-  };
-}
-
-function renderLessons() {
-  const lang = LANGUAGES[currentLanguage];
-  const s = getLanguageStats(currentLanguage);
-  document.getElementById('lessonsView').innerHTML = `
-    <div class="page-title"><div><h1>${lang.icon} ${lang.name}</h1><p>${lang.colorName}. ${s.done}/${s.total} conceitos concluídos.</p></div><button class="btn btn-secondary" id="backLanguages">← Linguagens</button></div>
-    <div class="card" style="margin-bottom:18px"><div class="stat"><div><strong>Progresso de ${lang.name}</strong><span>${s.percent}% concluído</span></div><strong>${s.percent}%</strong></div><div class="progress-bar" style="margin-top:14px"><div class="progress-fill" style="width:${s.percent}%"></div></div></div>
-    <div class="grid grid-3" style="margin-bottom:18px">${Object.entries(LEVELS).map(([num, level]) => renderLevelCard(currentLanguage, Number(num), level)).join('')}</div>
-    <div class="card"><div class="lesson-header"><div><h3>📚 Todos os conceitos</h3><span class="small-label">Clique em qualquer conceito para estudar.</span></div><button id="nextLesson" class="btn btn-primary">Continuar</button></div><div class="topic-list">${lang.topics.map(([title,desc],i)=>{
-      const done = !!activeLessons()[`${currentLanguage}:${i}`];
-      return `<div class="topic-item"><div class="topic-left"><div class="topic-number">${i+1}</div><div><strong>${done?'✅ ':''}${esc(title)}</strong><small>${esc(desc)}</small></div></div><button class="btn ${done?'btn-secondary':'btn-primary'}" data-topic="${i}">${done?'Revisar':'Estudar'}</button></div>`;
-    }).join('')}</div></div>
-  `;
-  document.getElementById('backLanguages').onclick = () => switchView('study');
-  document.getElementById('nextLesson').onclick = () => {
-    const firstUndone = lang.topics.findIndex((_,i)=>!activeLessons()[`${currentLanguage}:${i}`]);
-    openTopic(currentLanguage, firstUndone >= 0 ? firstUndone : 0);
-  };
-  document.querySelectorAll('[data-topic]').forEach(btn => btn.onclick = () => openTopic(currentLanguage, Number(btn.dataset.topic)));
-  document.querySelectorAll('[data-level]').forEach(card => card.onclick = () => openLevel(card.dataset.lang, Number(card.dataset.level)));
-}
-
-function completedLevel(langKey, level) {
-  return !!profileData().completedLevels[`${langKey}:${level}`];
-}
-function levelStats(langKey, level) {
-  const topics = LANGUAGES[langKey].topics;
-  const size = LEVELS[level].count;
-  const keys = topics.map((_,i)=>`${langKey}:${i}`);
-  const done = keys.filter(k=>activeLessons()[k]).length;
-  const sliceDone = keys.slice(0, Math.min(size,keys.length)).filter(k=>activeLessons()[k]).length;
-  const fakeCount = size;
-  return { done: sliceDone, total: fakeCount };
-}
-function renderLevelCard(langKey, number, level) {
-  const stats = levelStats(langKey, number);
-  const global = totalProgress().percent;
-  const unlocked = number === 1 || global >= level.unlock;
-  return `<div class="card level-card ${unlocked?'':'locked'}" data-level="${number}" data-lang="${langKey}">
-    <div class="level-top"><span class="level-badge">NÍVEL ${number}</span><span>${unlocked?'🔓':'🔒'}</span></div>
-    <h3>${level.name}</h3><p>${level.desc}</p>
-    <div class="progress-bar" style="margin-top:14px"><div class="progress-fill" style="width:${pct(stats.done,stats.total)}%"></div></div>
-    <div class="level-foot"><span>${stats.done}/${stats.total} desafios</span><span>+${level.xp} XP cada</span></div>
-  </div>`;
-}
-function openLevel(langKey, level) {
-  const global = totalProgress().percent;
-  if (level > 1 && global < LEVELS[level].unlock) {
-    toast(`Esse nível abre com ${LEVELS[level].unlock}% de progresso geral.`);
-    return;
-  }
-  currentLanguage = langKey;
-  const concepts = LANGUAGES[langKey].topics;
-  const needed = LEVELS[level].count;
-  const items = Array.from({length:needed}, (_,i) => concepts[i % concepts.length]);
-  showModal(`<div class="page-title"><div><h1>${LEVELS[level].name}</h1><p>${LANGUAGES[langKey].name}: ${needed} desafios gerados a partir dos conceitos.</p></div></div>
-    <div class="topic-list">${items.map(([title,desc],i)=>`<div class="topic-item"><div class="topic-left"><div class="topic-number">${i+1}</div><div><strong>${esc(title)}</strong><small>${esc(desc)}</small></div></div><button class="btn btn-primary" data-level-topic="${i}">Abrir</button></div>`).join('')}</div>`);
-  document.querySelectorAll('[data-level-topic]').forEach(btn => btn.onclick = () => { hideModal(); openTopic(langKey, Number(btn.dataset.levelTopic) % concepts.length); });
-}
-
-function explanationFor(profileId, langKey, title, desc) {
-  const p = PROFILES[profileId];
-  if (profileId === 'julya') return `Pensa que **${title}** é uma ferramenta da programação. ${desc}. Em palavras bem simples: você aprende essa ferramenta para conseguir mandar instruções melhores para o computador.`;
-  if (profileId === 'nairelis') return `O conceito **${title}** faz parte de ${LANGUAGES[langKey].name}. Ele está relacionado a ${desc}. A ideia é entender o que ele resolve, como funciona e quando usar.`;
-  return `**${title}** é um dos conceitos de ${LANGUAGES[langKey].name}. ${desc}. O objetivo é reconhecer esse conceito no código e saber quando aplicá-lo.`;
-}
-
-function exampleFor(langKey, title) {
-  const t = normalize(title);
-  const examples = {
-    html: {
-      'estrutura basica': '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Minha página</title>\n</head>\n<body>\n  <h1>Olá!</h1>\n</body>\n</html>',
-      'titulos': '<h1>Título principal</h1>\n<h2>Subtítulo</h2>',
-      'links': '<a href="https://exemplo.com">Abrir site</a>',
-      'imagens': '<img src="foto.jpg" alt="Descrição da foto">',
-      'paragrafos': '<p>Esse é um parágrafo.</p>'
-    },
-    css: {
-      'sintaxe css': 'h1 {\n  color: #7c5cff;\n  font-size: 32px;\n}',
-      'seletores': '.card { padding: 20px; }\n#titulo { font-weight: 800; }',
-      'box model': '.caixa {\n  margin: 10px;\n  border: 2px solid black;\n  padding: 20px;\n}',
-      'flexbox': '.container {\n  display: flex;\n  gap: 12px;\n  justify-content: center;\n}',
-      'responsividade': '@media (max-width: 700px) {\n  .menu { display: block; }\n}'
-    },
-    js: {
-      'variaveis': 'const nome = "Luiz";\nlet idade = 15;\nconsole.log(nome, idade);',
-      'if / else': 'const idade = 15;\nif (idade >= 18) {\n  console.log("Maior de idade");\n} else {\n  console.log("Menor de idade");\n}',
-      'funcoes': 'function somar(a, b) {\n  return a + b;\n}\nconsole.log(somar(2, 3));',
-      'arrays': 'const frutas = ["maçã", "banana", "uva"];\nconsole.log(frutas[0]);',
-      'dom': 'const titulo = document.querySelector("h1");\ntitulo.textContent = "Novo título";'
-    },
-    python: {
-      'variaveis': 'nome = "Luiz"\nidade = 15\nprint(nome, idade)',
-      'if / elif / else': 'idade = 15\nif idade >= 18:\n    print("Adulto")\nelse:\n    print("Menor")',
-      'funcoes': 'def somar(a, b):\n    return a + b\n\nprint(somar(2, 3))',
-      'listas': 'frutas = ["maçã", "banana", "uva"]\nprint(frutas[0])',
-      'dicionarios': 'aluno = {"nome": "Luiz", "idade": 15}\nprint(aluno["nome"])'
-    },
-    cpp: {
-      'estrutura basica': '#include <iostream>\nusing namespace std;\n\nint main() {\n  cout << "Olá!";\n  return 0;\n}',
-      'cout e cin': 'int idade;\ncin >> idade;\ncout << idade;',
-      'if / else': 'if (idade >= 18) {\n  cout << "Adulto";\n} else {\n  cout << "Menor";\n}',
-      'funcoes': 'int somar(int a, int b) {\n  return a + b;\n}'
-    },
-    java: {
-      'estrutura basica': 'public class Main {\n  public static void main(String[] args) {\n    System.out.println("Olá!");\n  }\n}',
-      'variaveis': 'String nome = "Luiz";\nint idade = 15;',
-      'metodos': 'static int somar(int a, int b) {\n  return a + b;\n}'
-    },
-    sql: {
-      'select': 'SELECT nome, idade\nFROM alunos;',
-      'where': 'SELECT *\nFROM alunos\nWHERE idade >= 18;',
-      'join': 'SELECT alunos.nome, cursos.nome\nFROM alunos\nJOIN cursos ON alunos.curso_id = cursos.id;'
-    }
-  };
-  return examples[langKey]?.[t] || genericExample(langKey, title);
-}
-function genericExample(langKey, title) {
-  const name = LANGUAGES[langKey].name;
-  if (langKey === 'html') return `<!-- Exemplo de ${title} -->\n<div class="exemplo">Olá!</div>`;
-  if (langKey === 'css') return `/* Exemplo de ${title} */\n.exemplo {\n  padding: 12px;\n}`;
-  if (langKey === 'js') return `// Exemplo de ${title}\nconst valor = 10;\nconsole.log(valor);`;
-  if (langKey === 'python') return `# Exemplo de ${title}\nvalor = 10\nprint(valor)`;
-  if (langKey === 'cpp') return `// Exemplo de ${title}\nint valor = 10;\ncout << valor;`;
-  if (langKey === 'java') return `// Exemplo de ${title}\nint valor = 10;\nSystem.out.println(valor);`;
-  return `-- Exemplo de ${title}\nSELECT * FROM tabela;`;
-}
-
-function openTopic(langKey, index) {
-  currentLanguage = langKey;
-  currentTopicIndex = index;
-  currentLesson = { langKey, index };
-  const lang = LANGUAGES[langKey];
-  const [title, desc] = lang.topics[index];
-  const key = `${langKey}:${index}`;
-  const done = !!activeLessons()[key];
-  const example = exampleFor(langKey, title);
-  showModal(`
-    <div class="lesson-content">
-      <div class="lesson-header"><div><span class="eyebrow">${lang.icon} ${lang.name}</span><h2>${esc(title)}</h2></div><span class="small-label">Conceito ${index+1}/${lang.topics.length}</span></div>
-      <p>${esc(explanationFor(state.currentProfile, langKey, title, desc)).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</p>
-      <div class="note">💡 <strong>Ideia principal:</strong> ${esc(desc)}.</div>
-      <h3>💻 Exemplo</h3>
-      <pre><code>${esc(example)}</code></pre>
-      <h3>🧠 O que você precisa lembrar</h3>
-      <ul><li>Entenda para que o conceito serve.</li><li>Observe a estrutura do exemplo.</li><li>Tente escrever uma versão parecida sem copiar.</li></ul>
-      <div class="card" style="margin-top:18px;background:var(--panel-2)">
-        <div class="lesson-header"><div><strong>🧩 Mini exercício</strong><div class="small-label">Qual é o nome do conceito que estamos estudando?</div></div></div>
-        <input id="lessonAnswer" class="answer-input" placeholder="Digite sua resposta..." autocomplete="off" />
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-primary" id="checkLesson">Verificar</button><button class="btn btn-secondary" id="showLessonAnswer">Mostrar resposta</button></div>
-        <div id="lessonFeedback" class="answer-feedback"></div>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px"><button class="btn ${done?'btn-secondary':'btn-primary'}" id="completeLesson">${done?'✅ Aula concluída':'✅ Marcar como concluída'}</button><button class="btn btn-secondary" id="openNextLesson">Próxima →</button></div>
-    </div>
-  `);
-  document.getElementById('checkLesson').onclick = () => checkLessonAnswer(title);
-  document.getElementById('showLessonAnswer').onclick = () => toast(`Resposta: ${title}`);
-  document.getElementById('completeLesson').onclick = () => completeLesson(langKey,index);
-  document.getElementById('openNextLesson').onclick = () => {
-    hideModal();
-    const next = (index + 1) % lang.topics.length;
-    setTimeout(()=>openTopic(langKey,next),100);
-  };
-  document.getElementById('lessonAnswer').addEventListener('keydown', e => { if(e.key === 'Enter') checkLessonAnswer(title); });
-}
-
-function checkLessonAnswer(title) {
-  const input = document.getElementById('lessonAnswer');
-  const fb = document.getElementById('lessonFeedback');
-  const val = normalize(input.value);
-  const answers = [normalize(title), slug(title), normalize(title).replace(/[^a-z0-9 ]/g,'')];
-  const correct = answers.some(a => val === a || val.includes(a) || a.includes(val) && val.length > 3);
-  fb.className = `answer-feedback show ${correct?'correct':'wrong'}`;
-  fb.textContent = correct ? '✅ Boa! Resposta aceita.' : `❌ Ainda não. Dica: procure o nome do conceito no título da aula.`;
-  if (correct) completeLesson(currentLesson.langKey,currentLesson.index,false);
-}
-function completeLesson(langKey,index,announce=true) {
-  const key = `${langKey}:${index}`;
-  if (!activeLessons()[key]) {
-    profileData().lessons[key] = true;
-    profileData().xp += 20;
-    saveState();
-    updateHeader();
-    checkAchievements();
-    if (announce) toast('+20 XP! Aula concluída.');
-  }
-  const btn = document.getElementById('completeLesson');
-  if (btn) { btn.textContent = '✅ Aula concluída'; btn.className = 'btn btn-secondary'; }
-}
-
-function generateExercises(langKey, count=12) {
-  const concepts = LANGUAGES[langKey].topics;
-  const exercises = [];
-  const templates = [
-    (t,d) => ({ q:`Em ${LANGUAGES[langKey].name}, para que serve "${t}"?`, answers:[t,d,`conceito ${t}`], hint:`Pense na ideia: ${d}.` }),
-    (t,d) => ({ q:`Qual destes termos está diretamente ligado a "${t}"?`, choices:[t, d, 'banana', 'monitor'], correct:0 }),
-    (t,d) => ({ q:`Escreva o nome do conceito: "${d}".`, answers:[t], hint:`Começa com: ${t.slice(0, Math.min(3,t.length))}...` })
-  ];
-  for (let i=0;i<count;i++) {
-    const [t,d]=concepts[i%concepts.length];
-    exercises.push({...templates[i%templates.length](t,d), id:`${langKey}-ex-${i}`});
-  }
-  return exercises;
-}
-
-function renderExercises() {
-  const exercises = generateExercises(currentLanguage, 15);
-  document.getElementById('exercisesView').innerHTML = `
-    <div class="page-title"><div><h1>🧩 Exercícios</h1><p>Pratique e use várias respostas aceitas.</p></div><select id="exerciseLanguage" class="answer-input" style="max-width:220px">${Object.entries(LANGUAGES).map(([k,l])=>`<option value="${k}" ${k===currentLanguage?'selected':''}>${l.icon} ${l.name}</option>`).join('')}</select></div>
-    <div class="grid" style="gap:14px">${exercises.map((ex,i)=>renderExerciseCard(ex,i)).join('')}</div>
-  `;
-  document.getElementById('exerciseLanguage').onchange = e => { currentLanguage=e.target.value; renderExercises(); };
-  document.querySelectorAll('[data-ex-check]').forEach(btn => btn.onclick = () => checkExercise(btn.dataset.exCheck));
-  document.querySelectorAll('[data-ex-show]').forEach(btn => btn.onclick = () => showExerciseAnswer(btn.dataset.exShow));
-}
-function renderExerciseCard(ex,i) {
-  const solved = profileData().exercises[ex.id];
-  return `<div class="card"><div class="exercise-meta"><span>Exercício ${i+1}</span><span>${solved?'✅ Resolvido':'20 XP'}</span></div><h3>${esc(ex.q)}</h3>${ex.choices?`<div class="choice-list">${ex.choices.map((c,j)=>`<button class="choice-btn" data-choice="${ex.id}" data-value="${j}">${String.fromCharCode(65+j)}) ${esc(c)}</button>`).join('')}</div>`:`<input id="ans-${ex.id}" class="answer-input" placeholder="Digite sua resposta..." />`}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn btn-primary" data-ex-check="${ex.id}">Verificar</button><button class="btn btn-secondary" data-ex-show="${ex.id}">Mostrar resposta</button></div><div id="fb-${ex.id}" class="answer-feedback"></div></div>`;
-}
-function findExercise(id) { return generateExercises(currentLanguage,15).find(x=>x.id===id); }
-function checkExercise(id) {
-  const ex = findExercise(id); const fb=document.getElementById(`fb-${id}`); let correct=false;
-  if (ex.choices) {
-    const sel = document.querySelector(`[data-choice="${id}"].selected`);
-    correct = !!sel && Number(sel.dataset.value) === ex.correct;
-  } else {
-    const input=document.getElementById(`ans-${id}`); const val=normalize(input.value); correct=ex.answers.some(a=>val===normalize(a)||val.includes(normalize(a)));
-  }
-  fb.className=`answer-feedback show ${correct?'correct':'wrong'}`;
-  fb.textContent=correct?'✅ Correto! +20 XP.':`❌ Ainda não. ${ex.hint||'Tente novamente ou mostre a resposta.'}`;
-  if(correct && !profileData().exercises[id]) { profileData().exercises[id]=true; profileData().xp+=20; saveState(); updateHeader(); checkAchievements(); }
-}
-function showExerciseAnswer(id) { const ex=findExercise(id); toast(ex.choices?`Resposta: ${String.fromCharCode(65+ex.correct)} — ${ex.choices[ex.correct]}`:`Respostas aceitas: ${ex.answers.slice(0,4).join(' / ')}`); }
-
-function renderQuizHome() {
-  document.getElementById('quizView').innerHTML = `
-    <div class="page-title"><div><h1>🧠 Quiz</h1><p>Teste seus conhecimentos em qualquer linguagem.</p></div></div>
-    <div class="grid grid-4">${Object.entries(LANGUAGES).map(([k,l])=>`<div class="card lang-card" data-quiz-lang="${k}"><div class="lang-icon">${l.icon}</div><h3>${l.name}</h3><p>10 perguntas rápidas.</p><div class="small-label" style="margin-top:12px">Melhor: ${profileData().quiz[k]?.best||0}/10</div></div>`).join('')}</div>
-  `;
-  document.querySelectorAll('[data-quiz-lang]').forEach(el=>el.onclick=()=>startQuiz(el.dataset.quizLang));
-}
-function startQuiz(langKey) {
-  currentLanguage=langKey;
-  const source=LANGUAGES[langKey].topics;
-  quizQuestions=Array.from({length:10},(_,i)=>{ const [title,desc]=source[(i*3)%source.length]; const choices=[title,desc,'Sintaxe de teclado','Um navegador']; const shuffled=[...choices].sort(()=>Math.random()-.5); return {q:`Qual opção representa o conceito "${title}"?`, choices:shuffled, correct:shuffled.indexOf(title)}; });
-  quizIndex=0; quizScore=0; selectedQuizAnswer=null; renderQuizQuestion();
-}
-function renderQuizQuestion() {
-  if (quizIndex >= quizQuestions.length) return finishQuiz();
-  const q=quizQuestions[quizIndex];
-  document.getElementById('quizView').innerHTML=`<div class="page-title"><div><h1>🧠 Quiz — ${LANGUAGES[currentLanguage].name}</h1><p>Pergunta ${quizIndex+1} de ${quizQuestions.length}</p></div><button class="btn btn-secondary" id="quitQuiz">Sair</button></div><div class="card"><div class="progress-bar" style="margin-bottom:22px"><div class="progress-fill" style="width:${(quizIndex/quizQuestions.length)*100}%"></div></div><p class="quiz-question">${esc(q.q)}</p><div class="choice-list">${q.choices.map((c,i)=>`<button class="choice-btn" data-qchoice="${i}">${String.fromCharCode(65+i)}) ${esc(c)}</button>`).join('')}</div><div style="margin-top:18px"><button class="btn btn-primary" id="quizNext" disabled>Responder</button></div><div id="quizFeedback" class="answer-feedback"></div></div>`;
-  document.getElementById('quitQuiz').onclick=()=>renderQuizHome();
-  document.querySelectorAll('[data-qchoice]').forEach(btn=>btn.onclick=()=>{ document.querySelectorAll('[data-qchoice]').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); selectedQuizAnswer=Number(btn.dataset.qchoice); document.getElementById('quizNext').disabled=false; });
-  document.getElementById('quizNext').onclick=()=>{ const fb=document.getElementById('quizFeedback'); const correct=selectedQuizAnswer===q.correct; if(correct) quizScore++; fb.className=`answer-feedback show ${correct?'correct':'wrong'}`; fb.textContent=correct?'✅ Correto!':'❌ Resposta errada.'; document.getElementById('quizNext').disabled=true; setTimeout(()=>{quizIndex++;selectedQuizAnswer=null;renderQuizQuestion();},450); };
-}
-function finishQuiz() {
-  const q=profileData().quiz[currentLanguage]||{best:0,attempts:0};
-  q.best=Math.max(q.best,quizScore); q.attempts+=1; profileData().quiz[currentLanguage]=q; profileData().xp+=quizScore*5; saveState(); updateHeader(); checkAchievements();
-  document.getElementById('quizView').innerHTML=`<div class="card" style="text-align:center;padding:50px"><div class="eyebrow">${LANGUAGES[currentLanguage].icon} ${LANGUAGES[currentLanguage].name}</div><h2>Quiz concluído!</h2><div class="quiz-score">${quizScore}/10</div><p>Você ganhou <strong>${quizScore*5} XP</strong>.</p><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px"><button class="btn btn-primary" id="retryQuiz">Tentar de novo</button><button class="btn btn-secondary" id="backQuiz">Escolher outra linguagem</button></div></div>`;
-  document.getElementById('retryQuiz').onclick=()=>startQuiz(currentLanguage); document.getElementById('backQuiz').onclick=()=>renderQuizHome();
-}
-
-function renderProgress() {
-  const t=totalProgress(); const d=profileData();
-  document.getElementById('progressView').innerHTML=`<div class="page-title"><div><h1>📊 Progresso</h1><p>Acompanhe tudo que ${esc(currentProfile().name)} já estudou.</p></div></div><div class="grid grid-3" style="margin-bottom:18px"><div class="card stat"><div><span>Progresso</span><strong>${t.percent}%</strong></div>📈</div><div class="card stat"><div><span>XP</span><strong>${d.xp}</strong></div>⭐</div><div class="card stat"><div><span>Aulas</span><strong>${t.done}</strong></div>✅</div></div><div class="grid grid-2"><div class="card"><h3>Por linguagem</h3><div class="topic-list" style="margin-top:12px">${Object.entries(LANGUAGES).map(([k,l])=>{const s=getLanguageStats(k);return `<div class="topic-item"><div class="topic-left"><div class="topic-number">${l.icon}</div><div><strong>${l.name}</strong><small>${s.done}/${s.total} conceitos</small></div></div><div style="min-width:120px"><div class="progress-bar"><div class="progress-fill" style="width:${s.percent}%"></div></div><div class="small-label" style="display:block;text-align:right;margin-top:6px">${s.percent}%</div></div></div>`}).join('')}</div></div><div class="card"><h3>🏆 Conquistas</h3><div class="topic-list" style="margin-top:12px">${renderAchievements()}</div></div></div>`;
-}
-function renderAchievements() {
-  const all=[['first-lesson','Primeiro passo','Conclua sua primeira aula'],['ten-lessons','Ritmo forte','Conclua 10 aulas'],['first-quiz','Primeiro quiz','Faça seu primeiro quiz'],['perfect-quiz','Perfeito!','Acerte 10/10 em um quiz'],['five-hundred-xp','500 XP','Chegue a 500 XP']];
-  return all.map(([id,name,desc])=>{const ok=profileData().achievements.includes(id);return `<div class="topic-item"><div class="topic-left"><div class="topic-number">${ok?'🏆':'🔒'}</div><div><strong>${name}</strong><small>${desc}</small></div></div><span class="small-label">${ok?'Conquistado':'Bloqueado'}</span></div>`}).join('');
-}
-function checkAchievements() {
-  const d=profileData(); const lessons=Object.keys(d.lessons).length;
-  const add=(id,cond)=>{if(cond&&!d.achievements.includes(id)){d.achievements.push(id);toast(`🏆 Conquista desbloqueada: ${id}`);}};
-  add('first-lesson',lessons>=1); add('ten-lessons',lessons>=10); add('first-quiz',Object.values(d.quiz).some(x=>x.attempts>0)); add('perfect-quiz',Object.values(d.quiz).some(x=>x.best>=10)); add('five-hundred-xp',d.xp>=500); saveState();
-}
-
-function showModal(html) {
-  const modal=document.getElementById('modal'); document.getElementById('modalContent').innerHTML=html; modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false');
-}
-function hideModal() { const modal=document.getElementById('modal'); modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); }
-
-function initSearch() {
-  const bar=document.getElementById('searchBar'); const input=document.getElementById('searchInput');
-  document.getElementById('searchFocus').onclick=()=>{bar.classList.toggle('hidden');if(!bar.classList.contains('hidden')) input.focus();};
-  document.getElementById('searchClose').onclick=()=>bar.classList.add('hidden');
-  input.oninput=()=>{
-    const q=normalize(input.value); const results=[];
-    if(q){Object.entries(LANGUAGES).forEach(([k,l])=>l.topics.forEach(([t,d],i)=>{if(normalize(`${l.name} ${t} ${d}`).includes(q)) results.push({k,i,t,d,l})}));}
-    document.getElementById('searchResults').innerHTML=results.slice(0,12).map(r=>`<div class="search-item" data-search="${r.k}:${r.i}"><strong>${r.l.icon} ${esc(r.l.name)} — ${esc(r.t)}</strong><small>${esc(r.d)}</small></div>`).join('') || (q?'<div class="empty">Nada encontrado.</div>':'');
-    document.querySelectorAll('[data-search]').forEach(el=>el.onclick=()=>{const [k,i]=el.dataset.search.split(':');bar.classList.add('hidden');input.value='';showModal('');openTopic(k,Number(i));});
-  };
-}
-
-function initNav() {
-  document.querySelectorAll('.nav-btn[data-view]').forEach(btn=>btn.onclick=()=>switchView(btn.dataset.view));
-  document.getElementById('changeProfile').onclick=()=>{document.getElementById('mainShell').classList.add('hidden');document.getElementById('profileScreen').classList.remove('hidden');document.getElementById('profileScreen').classList.add('active');renderProfiles();};
-  document.getElementById('themeToggle').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';document.body.classList.toggle('light',state.theme==='light');saveState();toast(state.theme==='light'?'☀️ Modo claro':'🌙 Modo escuro');};
-  document.getElementById('mobileMenu').onclick=()=>document.getElementById('sidebar').classList.add('open');
-  document.getElementById('mobileClose').onclick=closeSidebar;
-}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');}
-
-function bindGlobal() {
-  document.getElementById('modalClose').onclick=hideModal;
-  document.querySelector('#modal .modal-backdrop').onclick=hideModal;
-  document.addEventListener('keydown',e=>{if(e.key==='Escape') hideModal();});
-  document.addEventListener('click',e=>{const choice=e.target.closest('[data-choice]');if(choice){document.querySelectorAll(`[data-choice="${choice.dataset.choice}"]`).forEach(b=>b.classList.remove('selected'));choice.classList.add('selected');}});
-}
-
-function boot() {
-  document.body.classList.toggle('light',state.theme==='light');
-  renderProfiles();
-  initNav(); initSearch(); bindGlobal();
-  if(state.currentProfile && PROFILES[state.currentProfile]) {
-    document.getElementById('profileScreen').classList.add('hidden');
-    document.getElementById('profileScreen').classList.remove('active');
-    document.getElementById('mainShell').classList.remove('hidden');
-    renderCurrentView();
-  }
-}
-
 boot();
