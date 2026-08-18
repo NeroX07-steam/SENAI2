@@ -1,6 +1,7 @@
 const cfg=window.CODESTUDY_CONFIG||{};
-const hasSupabase=Boolean(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY&&!cfg.SUPABASE_URL.includes('COLE_')&&!cfg.SUPABASE_ANON_KEY.includes('COLE_'));
-const sb=hasSupabase?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY):null;
+const supabaseKey=cfg.SUPABASE_PUBLISHABLE_KEY||cfg.SUPABASE_ANON_KEY||'';
+const hasSupabase=Boolean(window.supabase&&cfg.SUPABASE_URL&&supabaseKey&&!cfg.SUPABASE_URL.includes('COLE_')&&!supabaseKey.includes('COLE_'));
+const sb=hasSupabase?window.supabase.createClient(cfg.SUPABASE_URL,supabaseKey):null;
 
 const languages={
  html:{name:'HTML',icon:'🌐',desc:'Estrutura da página',topics:[
