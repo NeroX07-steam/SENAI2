@@ -1,10 +1,16 @@
-// CONFIGURAÇÃO DO SUPABASE
-// 1) Crie um projeto em https://supabase.com
-// 2) Em Project Settings > API, copie a Project URL e a anon public key.
-// 3) Cole os valores abaixo.
-// 4) Rode o arquivo supabase.sql no SQL Editor do Supabase.
-// Sem configurar, o site funciona em MODO DEMO com localStorage.
+// =========================================================
+// CONFIGURAÇÃO DO SUPABASE - CODESTUDY
+// =========================================================
+
+// URL do seu projeto Supabase
+const SUPABASE_URL = "https://mvefcltfurlnnuueazym.supabase.co";
+
+// Chave pública (Publishable Key)
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable__5chwrwF90b9X3v2yTdYHg_paqyaH15";
+
+// Disponibiliza as configurações para o restante do site
 window.CODESTUDY_CONFIG = {
-  SUPABASE_URL: "COLE_SUA_SUPABASE_URL_AQUI",
-  SUPABASE_ANON_KEY: "COLE_SUA_SUPABASE_ANON_KEY_AQUI"
+    SUPABASE_URL: SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY: SUPABASE_PUBLISHABLE_KEY
 };
