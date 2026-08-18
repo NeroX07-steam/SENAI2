@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7c5cff" />
+  <title>CodeStudy — Central de Programação</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <section id="profileScreen" class="screen profile-screen active">
+      <div class="profile-glow glow-one"></div>
+      <div class="profile-glow glow-two"></div>
+      <div class="profile-wrap">
+        <div class="brand brand-center">
+          <div class="brand-mark">&lt;/&gt;</div>
+          <div>
+            <h1>CodeStudy</h1>
+            <p>Central de Programação</p>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <span class="eyebrow">📚 Seu espaço para aprender</span>
+          <h2>Quem vai estudar hoje?</h2>
+          <p>Escolha uma conta para carregar o progresso certo.</p>
+
+          <div id="profileOptions" class="profile-grid"></div>
+
+          <button id="continueLastProfile" class="btn btn-ghost hidden">
+            ↩ Continuar como <span id="lastProfileName"></span>
+          </button>
+        </div>
+
+        <div class="feature-row">
+          <div>💾 Progresso salvo</div>
+          <div>🧠 Quiz e exercícios</div>
+          <div>🧩 Respostas múltiplas</div>
+          <div>🌙 Modo escuro</div>
+        </div>
+      </div>
+    </section>
+
+    <div id="mainShell" class="main-shell hidden">
+      <aside id="sidebar" class="sidebar">
+        <div class="sidebar-top">
+          <div class="brand">
+            <div class="brand-mark">&lt;/&gt;</div>
+            <div>
+              <strong>CodeStudy</strong>
+              <span>Central de Programação</span>
+            </div>
+          </div>
+          <button id="mobileClose" class="icon-btn mobile-only" title="Fechar menu">✕</button>
+        </div>
+
+        <div class="current-profile" id="currentProfileCard"></div>
+
+        <nav class="nav-menu">
+          <button class="nav-btn active" data-view="dashboard">🏠 <span>Início</span></button>
+          <button class="nav-btn" data-view="study">📖 <span>Estudo</span></button>
+          <button class="nav-btn" data-view="lessons">🎓 <span>Aulas</span></button>
+          <button class="nav-btn" data-view="exercises">🧩 <span>Exercícios</span></button>
+          <button class="nav-btn" data-view="quiz">🧠 <span>Quiz</span></button>
+          <button class="nav-btn" data-view="progress">📊 <span>Progresso</span></button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <button id="themeToggle" class="nav-btn">🌙 <span>Alternar tema</span></button>
+          <button id="changeProfile" class="nav-btn">👤 <span>Trocar perfil</span></button>
+        </div>
+      </aside>
+
+      <main class="content-area">
+        <header class="topbar">
+          <button id="mobileMenu" class="icon-btn mobile-only" title="Abrir menu">☰</button>
+          <div class="topbar-title">
+            <div>
+              <span class="muted">Olá,</span>
+              <strong id="topProfileName">Luiz</strong>
+            </div>
+            <span id="topProfileTag" class="profile-tag"></span>
+          </div>
+          <div class="top-actions">
+            <button id="searchFocus" class="icon-btn" title="Pesquisar">🔎</button>
+            <div class="xp-pill">⭐ <span id="headerXP">0</span> XP</div>
+          </div>
+        </header>
+
+        <div id="searchBar" class="search-bar hidden">
+          <input id="searchInput" type="search" placeholder="Pesquisar linguagem, conceito ou aula..." />
+          <button id="searchClose" class="icon-btn">✕</button>
+          <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <section id="dashboardView" class="view active"></section>
+        <section id="studyView" class="view"></section>
+        <section id="lessonsView" class="view"></section>
+        <section id="exercisesView" class="view"></section>
+        <section id="quizView" class="view"></section>
+        <section id="progressView" class="view"></section>
+      </main>
+    </div>
+
+    <div id="modal" class="modal hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal="true"></div>
+      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button id="modalClose" class="modal-close">✕</button>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
